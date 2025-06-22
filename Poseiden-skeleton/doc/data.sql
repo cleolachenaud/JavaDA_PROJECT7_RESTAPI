@@ -1,6 +1,6 @@
 
 CREATE TABLE BidList (
-  BidListId tinyint(4) NOT NULL AUTO_INCREMENT,
+  BidListId tinyint(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   account VARCHAR(30) NOT NULL,
   type VARCHAR(30) NOT NULL,
   bidQuantity DOUBLE,
@@ -21,13 +21,11 @@ CREATE TABLE BidList (
   dealName VARCHAR(125),
   dealType VARCHAR(125),
   sourceListId VARCHAR(125),
-  side VARCHAR(125),
-
-  PRIMARY KEY (BidListId)
-)
+  side VARCHAR(125)
+);
 
 CREATE TABLE Trade (
-  TradeId tinyint(4) NOT NULL AUTO_INCREMENT,
+  TradeId tinyint(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   account VARCHAR(30) NOT NULL,
   type VARCHAR(30) NOT NULL,
   buyQuantity DOUBLE,
@@ -47,53 +45,43 @@ CREATE TABLE Trade (
   dealName VARCHAR(125),
   dealType VARCHAR(125),
   sourceListId VARCHAR(125),
-  side VARCHAR(125),
-
-  PRIMARY KEY (TradeId)
-)
+  side VARCHAR(125)
+);
 
 CREATE TABLE CurvePoint (
-  Id tinyint(4) NOT NULL AUTO_INCREMENT,
+  Id tinyint(4) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   CurveId tinyint,
   asOfDate TIMESTAMP,
   term DOUBLE ,
   value DOUBLE ,
-  creationDate TIMESTAMP ,
-
-  PRIMARY KEY (Id)
-)
+  creationDate TIMESTAMP
+);
 
 CREATE TABLE Rating (
-  Id tinyint(4) NOT NULL AUTO_INCREMENT,
+  Id tinyint(4) NOT NULL AUTO_INCREMENT   PRIMARY KEY,
   moodysRating VARCHAR(125),
   sandPRating VARCHAR(125),
   fitchRating VARCHAR(125),
-  orderNumber tinyint,
-
-  PRIMARY KEY (Id)
-)
+  orderNumber tinyint
+);
 
 CREATE TABLE RuleName (
-  Id tinyint(4) NOT NULL AUTO_INCREMENT,
+  Id tinyint(4) NOT NULL AUTO_INCREMENT   PRIMARY KEY,
   name VARCHAR(125),
   description VARCHAR(125),
   json VARCHAR(125),
   template VARCHAR(512),
   sqlStr VARCHAR(125),
-  sqlPart VARCHAR(125),
-
-  PRIMARY KEY (Id)
-)
+  sqlPart VARCHAR(125)
+);
 
 CREATE TABLE Users (
-  Id tinyint(4) NOT NULL AUTO_INCREMENT,
+  Id tinyint(4) NOT NULL AUTO_INCREMENT   PRIMARY KEY,
   username VARCHAR(125),
   password VARCHAR(125),
   fullname VARCHAR(125),
-  role VARCHAR(125),
+  role VARCHAR(125)
+);
 
-  PRIMARY KEY (Id)
-)
-
-insert into Users(fullname, username, password, role) values("Administrator", "admin", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "ADMIN")
-insert into Users(fullname, username, password, role) values("User", "user", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "USER")
+insert into Users(fullname, username, password, role) values("Administrator", "admin", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "ADMIN");
+insert into Users(fullname, username, password, role) values("User", "user", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "USER");
