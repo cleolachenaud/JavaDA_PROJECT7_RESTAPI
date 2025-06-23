@@ -1,0 +1,72 @@
+package com.nnk.springboot;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.Before;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.repositories.CurvePointRepository;
+import com.nnk.springboot.services.CurvePointService;
+
+
+@SpringBootTest
+//@RunWith(MockitoJUnitRunner.class)
+@AutoConfigureMockMvc
+public class CurvePointServiceTest {
+
+	@Mock
+    private CurvePointRepository curvePointRepository;
+
+    @InjectMocks
+    private CurvePointService curvePointService; // Classe A TESTER
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+    
+    @Test
+    public void testUpdateCurvePointException() {
+    	CurvePoint curvePoint = new CurvePoint();
+        
+        when(curvePointRepository.existsById(curvePoint.getId())).thenReturn(false);
+        
+        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
+        	curvePointService.updateCurvePoint(curvePoint);
+        });
+
+        assertEquals("service.curvepoint.notfound", thrown.getMessage());
+    }
+
+    @Test
+    public void testUpdateCurvePointOk() {
+        CurvePoint curvePoint = new CurvePoint();
+        curvePoint.setId(1);
+        
+        when(curvePointRepository.existsById(curvePoint.getId())).thenReturn(true);
+        when(curvePointRepository.save(curvePoint)).thenReturn(curvePoint);
+        
+        CurvePoint result = curvePointService.updateCurvePoint(curvePoint);
+        
+        verify(curvePointRepository).save(curvePoint);
+        assertNotNull(result);
+        assertEquals(curvePoint, result);
+    }
+
+}
