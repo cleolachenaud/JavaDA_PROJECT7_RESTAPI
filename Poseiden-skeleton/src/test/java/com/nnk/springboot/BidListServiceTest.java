@@ -22,21 +22,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.repositories.CurvePointRepository;
-import com.nnk.springboot.services.CurvePointService;
+import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.repositories.BidListRepository;
+import com.nnk.springboot.services.BidListService;
 
 
 @SpringBootTest
 //@RunWith(MockitoJUnitRunner.class)
 @AutoConfigureMockMvc
-public class CurvePointServiceTest {
+public class BidListServiceTest {
 
 	@Mock
-    private CurvePointRepository curvePointRepository;
+    private BidListRepository bidListRepository;
 
     @InjectMocks
-    private CurvePointService curvePointService; // Classe A TESTER
+    private BidListService bidListService; // Classe A TESTER
 
     @Before
     public void setUp() {
@@ -44,44 +44,44 @@ public class CurvePointServiceTest {
     }
     
     @Test
-    public void testUpdateCurvePointException() {
-    	CurvePoint curvePoint = new CurvePoint();
+    public void testUpdateBidListException() {
+    	BidList bidList = new BidList();
         
-        when(curvePointRepository.existsById(curvePoint.getId())).thenReturn(false);
+        when(bidListRepository.existsById(bidList.getBidListId())).thenReturn(false);
         
         RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
-        	curvePointService.updateCurvePoint(curvePoint);
+        	bidListService.updateBidList(bidList);
         });
 
-        assertEquals("service.curvepoint.notfound", thrown.getMessage());
+        assertEquals("service.bidlist.notfound", thrown.getMessage());
     }
 
     @Test
-    public void testUpdateCurvePointOk() {
-        CurvePoint curvePoint = new CurvePoint();
-        curvePoint.setId(1);
+    public void testUpdateBidListOk() {
+    	BidList bidList = new BidList();
+    	bidList.setBidListId(1);
                
         
-        when(curvePointRepository.existsById(curvePoint.getId())).thenReturn(true);
-        when(curvePointRepository.save(curvePoint)).thenReturn(curvePoint);
+        when(bidListRepository.existsById(bidList.getBidListId())).thenReturn(true);
+        when(bidListRepository.save(bidList)).thenReturn(bidList);
         
-        CurvePoint result = curvePointService.updateCurvePoint(curvePoint);
+        BidList result = bidListService.updateBidList(bidList);
         
-        verify(curvePointRepository).save(curvePoint);
+        verify(bidListRepository).save(bidList);
         assertNotNull(result);
-        assertEquals(curvePoint, result);
+        assertEquals(bidList, result);
     }
     @Test
-    public void testDeleteCurvePointException() {
-    	CurvePoint curvePoint = new CurvePoint();
+    public void testDeleteBidListException() {
+    	BidList bidList = new BidList();
         
-        when(curvePointRepository.findById(curvePoint.getId())).thenReturn(Optional.empty());
+        when(bidListRepository.findById(bidList.getBidListId())).thenReturn(Optional.empty());
         
         RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
-        	curvePointService.deleteCurvePointById(curvePoint.getId());
+        	bidListService.deleteBidListById(bidList.getBidListId());
         });
 
-        assertEquals("service.curvepoint.notfound", thrown.getMessage());
+        assertEquals("service.bidlist.notfound", thrown.getMessage());
     }
 
     

@@ -1,0 +1,76 @@
+package com.nnk.springboot;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.*; 
+import static org.mockito.Mockito.*; 
+ 
+import org.springframework.ui.Model; 
+import org.springframework.validation.BindingResult; 
+import org.springframework.validation.BeanPropertyBindingResult; 
+import org.springframework.boot.test.context.SpringBootTest;
+
+import com.nnk.springboot.controllers.BidListController;
+import com.nnk.springboot.controllers.CurveController;
+import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.services.BidListService;
+import com.nnk.springboot.services.CurvePointService;
+@SpringBootTest
+public class BidControllerTest {
+	
+
+	@Mock
+    private BidListService bidListService; 
+    @Mock
+    private Model model; 
+    @InjectMocks
+    private BidListController bidListController;
+
+    public BidControllerTest() {
+        MockitoAnnotations.openMocks(this); 
+         
+    }
+
+   
+
+    @Test
+    public void testAddBidForm() {
+
+        BidList bidList = new BidList(); 
+        String viewName = bidListController.addBidForm(bidList); 
+        assertEquals("bidList/add", viewName); 
+    }
+    @Test
+    public void testValidateAvecErreurs() {
+
+    	BidList bidList = new BidList();  
+        BindingResult result = new BeanPropertyBindingResult(bidList, "bidList");
+        result.reject("error", "controller.bidlist.erreur"); // Simuler une erreur
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        	bidListController.validate(bidList, result, model);
+        });
+        verifyNoInteractions(bidListService); // Je vérifie que le service n'a pas été appelé
+        assertEquals("controller.bidlist.erreur", exception.getMessage()); // Je vérifie le message d'exception
+        
+    }
+
+    @Test
+    public void testValidateSansErreurs() {
+
+    	BidList bidList = new BidList("Account Test", "Type Test", 10d);
+        BindingResult result = new BeanPropertyBindingResult(bidList, "bidList");
+
+        when(bidListService.addBidList(bidList)).thenReturn(bidList); 
+
+        String viewName = bidListController.validate(bidList, result, model); 
+     
+        verify(model).addAttribute("bidList", bidList); // Je vérifie l'ajout au modèle
+        verify(bidListService).addBidList(bidList); // Je vérifie que le service a été appelé
+        assertEquals("bidList/add", viewName); // Je vérifie que la vue retournée est correcte
+    }
+}

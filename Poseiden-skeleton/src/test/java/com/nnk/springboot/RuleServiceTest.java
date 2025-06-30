@@ -22,21 +22,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.repositories.CurvePointRepository;
-import com.nnk.springboot.services.CurvePointService;
+import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.repositories.RuleNameRepository;
+import com.nnk.springboot.services.RuleNameService;
 
 
 @SpringBootTest
 //@RunWith(MockitoJUnitRunner.class)
 @AutoConfigureMockMvc
-public class CurvePointServiceTest {
+public class RuleServiceTest {
 
 	@Mock
-    private CurvePointRepository curvePointRepository;
+    private RuleNameRepository ruleNameRepository;
 
     @InjectMocks
-    private CurvePointService curvePointService; // Classe A TESTER
+    private RuleNameService ruleNameService; // Classe A TESTER
 
     @Before
     public void setUp() {
@@ -44,44 +44,44 @@ public class CurvePointServiceTest {
     }
     
     @Test
-    public void testUpdateCurvePointException() {
-    	CurvePoint curvePoint = new CurvePoint();
+    public void testUpdateRuleNameException() {
+    	RuleName ruleName = new RuleName();
         
-        when(curvePointRepository.existsById(curvePoint.getId())).thenReturn(false);
+        when(ruleNameRepository.existsById(ruleName.getId())).thenReturn(false);
         
         RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
-        	curvePointService.updateCurvePoint(curvePoint);
+        	ruleNameService.updateRuleName(ruleName);
         });
 
-        assertEquals("service.curvepoint.notfound", thrown.getMessage());
+        assertEquals("service.rulename.notfound", thrown.getMessage());
     }
 
     @Test
-    public void testUpdateCurvePointOk() {
-        CurvePoint curvePoint = new CurvePoint();
-        curvePoint.setId(1);
+    public void testUpdateRuleNameOk() {
+    	RuleName ruleName = new RuleName();
+    	ruleName.setId(1);
                
         
-        when(curvePointRepository.existsById(curvePoint.getId())).thenReturn(true);
-        when(curvePointRepository.save(curvePoint)).thenReturn(curvePoint);
+        when(ruleNameRepository.existsById(ruleName.getId())).thenReturn(true);
+        when(ruleNameRepository.save(ruleName)).thenReturn(ruleName);
         
-        CurvePoint result = curvePointService.updateCurvePoint(curvePoint);
+        RuleName result = ruleNameService.updateRuleName(ruleName);
         
-        verify(curvePointRepository).save(curvePoint);
+        verify(ruleNameRepository).save(ruleName);
         assertNotNull(result);
-        assertEquals(curvePoint, result);
+        assertEquals(ruleName, result);
     }
     @Test
-    public void testDeleteCurvePointException() {
-    	CurvePoint curvePoint = new CurvePoint();
+    public void testDeleteRuleNameException() {
+    	RuleName ruleName = new RuleName();
         
-        when(curvePointRepository.findById(curvePoint.getId())).thenReturn(Optional.empty());
+        when(ruleNameRepository.findById(ruleName.getId())).thenReturn(Optional.empty());
         
         RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
-        	curvePointService.deleteCurvePointById(curvePoint.getId());
+        	ruleNameService.deleteRuleNameById(ruleName.getId());
         });
 
-        assertEquals("service.curvepoint.notfound", thrown.getMessage());
+        assertEquals("service.rulename.notfound", thrown.getMessage());
     }
 
     

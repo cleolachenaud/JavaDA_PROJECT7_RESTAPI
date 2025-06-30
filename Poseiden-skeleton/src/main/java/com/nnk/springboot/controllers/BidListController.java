@@ -45,7 +45,7 @@ public class BidListController {
     public String validate(@Valid BidList bidList, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("le bidList comporte des erreurs");
+    		throw new IllegalArgumentException("controller.bidlist.erreur");
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("addCurvePoint"+ bidList.toString());
@@ -67,7 +67,7 @@ public class BidListController {
                              BindingResult result, Model model) {
        	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("le bidList comporte des erreurs");
+    		throw new IllegalArgumentException("controller.bidlist.erreur");
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("updateCurvePoint"+ bidList.toString());

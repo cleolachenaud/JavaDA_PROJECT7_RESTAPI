@@ -44,7 +44,7 @@ private static final Logger logger = LogManager.getLogger("TradeController");
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("le trade comporte des erreurs");
+    		throw new IllegalArgumentException("controller.trade.erreur");
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("addTrade"+ trade.toString());
@@ -66,7 +66,7 @@ private static final Logger logger = LogManager.getLogger("TradeController");
                              BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("le trade comporte des erreurs");
+    		throw new IllegalArgumentException("controller.trade.erreur");
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("updateTrade"+ trade.toString());

@@ -42,7 +42,6 @@ public class CurvePointService {
         return curvePointRepository.findById(id);
     }
 	public void deleteCurvePointById(Integer id) {
-		 // je vérifie que le curvePoint existe
         curvePointRepository.findById(id)
 			.orElseThrow(() -> new RuntimeException("service.curvepoint.notfound"));
         curvePointRepository.deleteById(id);

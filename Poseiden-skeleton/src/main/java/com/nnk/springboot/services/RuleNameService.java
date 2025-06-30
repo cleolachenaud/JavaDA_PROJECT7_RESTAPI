@@ -33,7 +33,7 @@ public class RuleNameService {
 		 // je vérifie que le ruleName existe, si il n'existe pas je remonte une exception
        if(!ruleNameRepository.existsById(ruleName.getId())){
     	   logger.error("ruleName inconnu");
-    	   throw new RuntimeException("ruleName n'existe pas en base de données ");
+    	   throw new RuntimeException("service.rulename.notfound");
        }
        // si il existe, j'insère le nouveau ruleName en bdd. 
 		return ruleNameRepository.save(ruleName);
@@ -45,7 +45,7 @@ public class RuleNameService {
 	public void deleteRuleNameById(Integer id) {
 		 // je vérifie que le ruleName existe
 		ruleNameRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("ruleName inconnu en base"));
+			.orElseThrow(() -> new RuntimeException("service.rulename.notfound"));
 		ruleNameRepository.deleteById(id);
     }
 

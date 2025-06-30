@@ -31,7 +31,7 @@ public class RatingService {
 		 // je vérifie que le rating existe, si il n'existe pas je remonte une exception
       if(!ratingRepository.existsById(rating.getId())){
    	   logger.error("rating inconnu");
-   	   throw new RuntimeException("le rating n'existe pas en base de données ");
+   	   throw new RuntimeException("service.rating.notfound");
       }
       // si il existe, j'insère le nouveau rating en bdd. 
 		return ratingRepository.save(rating);
@@ -43,7 +43,7 @@ public class RatingService {
 	public void deleteRatingById(Integer id) {
 		 // je vérifie que le rating existe
 		ratingRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("rating inconnu en base"));
+			.orElseThrow(() -> new RuntimeException("service.rating.notfound"));
 		ratingRepository.deleteById(id);
    }
 }

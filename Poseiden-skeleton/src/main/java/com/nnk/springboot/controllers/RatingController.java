@@ -43,7 +43,7 @@ public class RatingController {
     public String validate(@Valid Rating rating, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("le rating comporte des erreurs");
+    		throw new IllegalArgumentException("controller.rating.erreur");
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("addRating"+ rating.toString());
@@ -65,10 +65,10 @@ public class RatingController {
                              BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("le rating comporte des erreurs");
+    		throw new IllegalArgumentException("controller.rating.erreur");
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
-		logger.info("updateCurvePoint"+ rating.toString());
+		logger.info("updateRating"+ rating.toString());
 		Rating ratingResultat = ratingService.updateRating(rating);
 		model.addAttribute("rating", ratingResultat);
         return "redirect:/rating/list";

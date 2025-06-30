@@ -48,7 +48,7 @@ public class CurveController {
     public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("le curvePoint comporte des erreurs");
+    		throw new IllegalArgumentException("controller.curvepoint.erreur");
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("addCurvePoint"+ curvePoint.toString());
@@ -70,7 +70,7 @@ public class CurveController {
                              BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("le curvePoint comporte des erreurs");
+    		throw new IllegalArgumentException("controller.curvepoint.erreur");
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("updateCurvePoint"+ curvePoint.toString());

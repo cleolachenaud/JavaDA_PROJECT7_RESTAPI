@@ -31,7 +31,7 @@ public class BidListService {
 		 // je vérifie que le BidList existe, si il n'existe pas je remonte une exception
        if(!bidListRepository.existsById(bidList.getBidListId())){
     	   logger.error("bidList inconnu");
-    	   throw new RuntimeException( "bidList n'existe pas en base de données ");
+    	   throw new RuntimeException( "service.bidlist.notfound");
        }
        // si il existe, j'insère le nouveau BidList en bdd. 
 		return bidListRepository.save(bidList);
@@ -43,7 +43,7 @@ public class BidListService {
 	public void deleteBidListById(Integer id) {
 		 // je vérifie que le bidlist existe
 		bidListRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("BidList inconnu en base"));
+			.orElseThrow(() -> new RuntimeException("service.bidlist.notfound"));
 		bidListRepository.deleteById(id);
     }
 }

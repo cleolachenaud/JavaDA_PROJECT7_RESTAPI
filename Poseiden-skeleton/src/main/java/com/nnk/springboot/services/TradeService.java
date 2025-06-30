@@ -32,7 +32,7 @@ public class TradeService {
 		 // je vérifie que le trade existe, si il n'existe pas je remonte une exception
        if(!tradeRepository.existsById(trade.getTradeId())){
     	   logger.error("trade inconnu");
-    	   throw new RuntimeException("trade n'existe pas en base de données ");
+    	   throw new RuntimeException("service.trade.notfound");
        }
        // si il existe, j'insère le nouveau curvePoint en bdd. 
 		return tradeRepository.save(trade);
@@ -44,7 +44,7 @@ public class TradeService {
 	public void deleteTradeById(Integer id) {
 		 // je vérifie que le trade existe
 		tradeRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("trade inconnu en base"));
+			.orElseThrow(() -> new RuntimeException("service.trade.notfound"));
 		tradeRepository.deleteById(id);
     }
 
