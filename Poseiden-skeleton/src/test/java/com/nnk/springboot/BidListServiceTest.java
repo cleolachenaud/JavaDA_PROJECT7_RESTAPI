@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.services.BidListService;
 
@@ -83,6 +84,29 @@ public class BidListServiceTest {
 
         assertEquals("service.bidlist.notfound", thrown.getMessage());
     }
+    @Test
+    public void testDeleteBidListByIdOk() {
+        Integer id = 1;
+        when(bidListRepository.findById(id)).thenReturn(Optional.of(new BidList()));
 
+        bidListService.deleteBidListById(id);
+
+        verify(bidListRepository).deleteById(id);
+    }
+    
+    @Test
+    public void testAddBidListByIdOk() {
+    	BidList bidList = new BidList();
+    	bidList.setBidListId(1);
+        
+        when(bidListRepository.save(bidList)).thenReturn(bidList);
+        
+        BidList result = bidListService.addBidList(bidList);
+        
+        verify(bidListRepository).save(bidList);
+        assertNotNull(result);
+        assertEquals(bidList, result);
+    	
+    }
     
 }

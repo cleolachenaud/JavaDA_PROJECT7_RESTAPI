@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 import com.nnk.springboot.controllers.TradeController;
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.services.TradeService;
 @SpringBootTest
@@ -70,5 +71,29 @@ public class TradeControllerTest {
         verify(model).addAttribute("trade", trade); // Je vérifie l'ajout au modèle
         verify(tradeService).addTrade(trade); // Je vérifie que le service a été appelé
         assertEquals("trade/add", viewName); // Je vérifie que la vue retournée est correcte
+    }
+    @Test
+    public void testValidateUpdateSansErreurs() {
+
+    	Trade trade = new Trade("Trade Account", "Type");
+        BindingResult result = new BeanPropertyBindingResult(trade, "trade");
+
+        when(tradeService.updateTrade(trade)).thenReturn(trade);
+
+        String viewName = tradeController.updateTrade(null, trade, result, model); 
+     
+        verify(model).addAttribute("trade", trade); // Je vérifie l'ajout au modèle
+        verify(tradeService).updateTrade(trade); // Je vérifie que le service a été appelé
+        assertEquals("redirect:/trade/list", viewName); // Je vérifie que la vue retournée est correcte
+    }
+    
+    @Test
+    public void testDeleteSansErreurs() {
+    	Integer id = 1;
+
+        doNothing().when(tradeService).deleteTradeById(id);
+        String viewName = tradeController.deleteTrade(id);
+        verify(tradeService).deleteTradeById(id); // Je vérifie que le service a été appelé
+        assertEquals("redirect:/trade/list", viewName); // Je vérifie que la vue retournée est correcte
     }
 }

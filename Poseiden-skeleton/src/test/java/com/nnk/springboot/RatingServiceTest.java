@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.repositories.RatingRepository;
 import com.nnk.springboot.services.RatingService;
@@ -81,6 +82,31 @@ public class RatingServiceTest {
         });
 
         assertEquals("service.rating.notfound", thrown.getMessage());
+    }
+    
+    @Test
+    public void testDeleteRatingByIdOk() {
+        Integer id = 1;
+        when(ratingRepository.findById(id)).thenReturn(Optional.of(new Rating()));
+
+        ratingService.deleteRatingById(id);
+
+        verify(ratingRepository).deleteById(id);
+    }
+    
+    @Test
+    public void testAddCurvePointByIdOk() {
+    	Rating rating = new Rating();
+        rating.setId(1);
+        
+        when(ratingRepository.save(rating)).thenReturn(rating);
+        
+        Rating result = ratingService.addRating(rating);
+        
+        verify(ratingRepository).save(rating);
+        assertNotNull(result);
+        assertEquals(rating, result);
+    	
     }
 
     

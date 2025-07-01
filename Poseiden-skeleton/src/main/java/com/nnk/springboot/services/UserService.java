@@ -31,7 +31,7 @@ public class UserService {
 		 // je vérifie que le user existe, si il n'existe pas je remonte une exception
        if(!userRepository.existsById(user.getId())){
     	   logger.error("user inconnu");
-    	   throw new RuntimeException("user n'existe pas en base de données ");
+    	   throw new RuntimeException("service.user.notfound");
        }
        // si il existe, j'insère le nouveau curvePoint en bdd. 
 		return userRepository.save(user);
@@ -43,7 +43,7 @@ public class UserService {
 	public void deleteUserById(Integer id) {
 		 // je vérifie que le user existe
 		userRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("user inconnu en base"));
+			.orElseThrow(() -> new RuntimeException("service.user.notfound"));
 		userRepository.deleteById(id);
     }
 

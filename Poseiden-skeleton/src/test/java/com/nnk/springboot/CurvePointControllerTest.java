@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 import com.nnk.springboot.controllers.CurveController;
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.services.CurvePointService;
 @SpringBootTest
@@ -70,5 +71,30 @@ public class CurvePointControllerTest {
         verify(model).addAttribute("curvePoint", curvePoint); // Je vérifie l'ajout au modèle
         verify(curvePointService).addCurvePoint(curvePoint); // Je vérifie que le service a été appelé
         assertEquals("curvePoint/add", viewName); // Je vérifie que la vue retournée est correcte
+    }
+    
+    @Test
+    public void testValidateUpdateSansErreurs() {
+
+    	CurvePoint curvePoint = new CurvePoint(10, 10d, 30d); 
+        BindingResult result = new BeanPropertyBindingResult(curvePoint, "curvePoint");
+
+        when(curvePointService.updateCurvePoint(curvePoint)).thenReturn(curvePoint);
+
+        String viewName = curveController.updateBid(null, curvePoint, result, model); 
+     
+        verify(model).addAttribute("curvePoint", curvePoint); // Je vérifie l'ajout au modèle
+        verify(curvePointService).updateCurvePoint(curvePoint); // Je vérifie que le service a été appelé
+        assertEquals("redirect:/curvePoint/list", viewName); // Je vérifie que la vue retournée est correcte
+    }
+    
+    @Test
+    public void testDeleteSansErreurs() {
+    	Integer id = 1;
+
+        doNothing().when(curvePointService).deleteCurvePointById(id);
+        String viewName = curveController.deleteBid(id);
+        verify(curvePointService).deleteCurvePointById(id); // Je vérifie que le service a été appelé
+        assertEquals("redirect:/curvePoint/list", viewName); // Je vérifie que la vue retournée est correcte
     }
 }

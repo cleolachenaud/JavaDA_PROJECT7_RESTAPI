@@ -83,6 +83,31 @@ public class CurvePointServiceTest {
 
         assertEquals("service.curvepoint.notfound", thrown.getMessage());
     }
+    
+    @Test
+    public void testDeleteCurvePointByIdOk() {
+        Integer id = 1;
+        when(curvePointRepository.findById(id)).thenReturn(Optional.of(new CurvePoint()));
+
+        curvePointService.deleteCurvePointById(id);
+
+        verify(curvePointRepository).deleteById(id);
+    }
+    
+    @Test
+    public void testAddCurvePointByIdOk() {
+    	CurvePoint curvePoint = new CurvePoint();
+        curvePoint.setId(1);
+        
+        when(curvePointRepository.save(curvePoint)).thenReturn(curvePoint);
+        
+        CurvePoint result = curvePointService.addCurvePoint(curvePoint);
+        
+        verify(curvePointRepository).save(curvePoint);
+        assertNotNull(result);
+        assertEquals(curvePoint, result);
+    	
+    }
 
     
 }

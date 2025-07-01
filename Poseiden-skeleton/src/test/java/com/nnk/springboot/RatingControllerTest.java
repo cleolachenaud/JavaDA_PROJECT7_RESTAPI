@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 import com.nnk.springboot.controllers.RatingController;
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.services.RatingService;
 @SpringBootTest
@@ -70,5 +71,30 @@ public class RatingControllerTest {
         verify(model).addAttribute("rating", rating); // Je vérifie l'ajout au modèle
         verify(ratingService).addRating(rating); // Je vérifie que le service a été appelé
         assertEquals("rating/add", viewName); // Je vérifie que la vue retournée est correcte
+    }
+    
+    @Test
+    public void testValidateUpdateSansErreurs() {
+
+    	Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
+        BindingResult result = new BeanPropertyBindingResult(rating, "bidList");
+
+        when(ratingService.updateRating(rating)).thenReturn(rating);
+
+        String viewName = ratingController.updateRating(null, rating, result, model); 
+     
+        verify(model).addAttribute("rating", rating); // Je vérifie l'ajout au modèle
+        verify(ratingService).updateRating(rating); // Je vérifie que le service a été appelé
+        assertEquals("redirect:/rating/list", viewName); // Je vérifie que la vue retournée est correcte
+    }
+    
+    @Test
+    public void testDeleteSansErreurs() {
+    	Integer id = 1;
+
+        doNothing().when(ratingService).deleteRatingById(id);
+        String viewName = ratingController.deleteRating(id);
+        verify(ratingService).deleteRatingById(id); // Je vérifie que le service a été appelé
+        assertEquals("redirect:/rating/list", viewName); // Je vérifie que la vue retournée est correcte
     }
 }

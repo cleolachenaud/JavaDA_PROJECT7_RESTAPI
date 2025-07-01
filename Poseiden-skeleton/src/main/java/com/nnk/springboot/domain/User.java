@@ -19,6 +19,17 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 public class User {
+	
+	public User(String username, String password, String fullname, String role) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.fullname = fullname;
+		this.role = role;
+	}
+	
+	
+	
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,7 +71,7 @@ public class BidListController {
     		throw new IllegalArgumentException("controller.bidlist.erreur");
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
-		logger.info("updateCurvePoint"+ bidList.toString());
+		logger.info("updateBidList"+ bidList.toString());
 		BidList bidListResultat = bidListService.updateBidList(bidList);
 		model.addAttribute("bidList", bidListResultat);
         return "redirect:/bidList/list";
@@ -78,8 +79,16 @@ public class BidListController {
 
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
-    	logger.info("delete curvePoint");
-    	bidListService.deleteBidListById(id);
+    	Optional<BidList> bidList = bidListService.getBidListById(id);
+    	logger.info("delete bidlist");
+    	model.addAttribute(bidList);
+        return "bidList/delete";
+    }
+    
+    @PostMapping("/bidList/delete/{id}")
+    public String deleteBid(@PathVariable("id") Integer id) {
+        logger.info("Delete bid with id: {}", id);
+        bidListService.deleteBidListById(id);
         return "redirect:/bidList/list";
     }
 }

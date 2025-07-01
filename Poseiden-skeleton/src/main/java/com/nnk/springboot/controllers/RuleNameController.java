@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.services.CurvePointService;
@@ -80,10 +81,16 @@ public class RuleNameController {
 		model.addAttribute("ruleName", ruleNameResultat);
         return "redirect:/ruleName/list";
     }
-
     @GetMapping("/ruleName/delete/{id}")
-    public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
-    	logger.info("delete curvePoint");
+    public String deleteBid(@PathVariable("id") Integer id, Model model) {
+    	Optional<RuleName> ruleName = ruleNameService.getRuleNameById(id);
+    	logger.info("delete ruleName");
+    	model.addAttribute(ruleName);
+        return "ruleName/delete";
+    }
+    @PostMapping("/ruleName/delete/{id}")
+    public String deleteRuleName(@PathVariable("id") Integer id) {
+    	logger.info("Delete rulename with id: {}", id);
     	ruleNameService.deleteRuleNameById(id);
         return "redirect:/ruleName/list";
     }

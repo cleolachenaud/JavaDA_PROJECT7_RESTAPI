@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 
 import com.nnk.springboot.controllers.RuleNameController;
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.services.RuleNameService;
 @SpringBootTest
@@ -70,5 +71,30 @@ public class RuleControllerTest {
         verify(model).addAttribute("ruleName", ruleName); // Je vérifie l'ajout au modèle
         verify(ruleNameService).addRuleName(ruleName); // Je vérifie que le service a été appelé
         assertEquals("ruleName/add", viewName); // Je vérifie que la vue retournée est correcte
+    }
+    
+    @Test
+    public void testUpdateSansErreurs() {
+
+    	RuleName ruleName = new RuleName("Rule Name", "Description", "Json", "Template", "SQL", "SQL Part");
+        BindingResult result = new BeanPropertyBindingResult(ruleName, "ruleName");
+
+        when(ruleNameService.updateRuleName(ruleName)).thenReturn(ruleName);
+
+        String viewName = ruleNameController.updateRuleName(null, ruleName, result, model); 
+     
+        verify(model).addAttribute("ruleName", ruleName); // Je vérifie l'ajout au modèle
+        verify(ruleNameService).updateRuleName(ruleName); // Je vérifie que le service a été appelé
+        assertEquals("redirect:/ruleName/list", viewName); // Je vérifie que la vue retournée est correcte
+    }
+    
+    @Test
+    public void testDeleteSansErreurs() {
+    	Integer id = 1;
+
+        doNothing().when(ruleNameService).deleteRuleNameById(id);
+        String viewName = ruleNameController.deleteRuleName(id);
+        verify(ruleNameService).deleteRuleNameById(id); // Je vérifie que le service a été appelé
+        assertEquals("redirect:/ruleName/list", viewName); // Je vérifie que la vue retournée est correcte
     }
 }

@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.services.TradeService;
@@ -74,10 +75,18 @@ private static final Logger logger = LogManager.getLogger("TradeController");
 		model.addAttribute("trade", tradeResultat);
         return "redirect:/trade/list";
     }
-
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Trade by Id and delete the Trade, return to Trade list
+    	Optional<Trade> trade = tradeService.getTradeById(id);
+    	logger.info("delete trade");
+    	model.addAttribute(trade);
+        return "trade/delete";
+    }
+    
+    @PostMapping("/trade/delete/{id}")
+    public String deleteTrade(@PathVariable("id") Integer id) {
+        logger.info("Delete trade with id: {}", id);
+       	tradeService.deleteTradeById(id);
         return "redirect:/trade/list";
     }
 }

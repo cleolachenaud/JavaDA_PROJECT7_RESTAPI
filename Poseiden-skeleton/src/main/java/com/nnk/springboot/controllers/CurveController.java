@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.services.CurvePointService;
 import org.apache.logging.log4j.LogManager;
@@ -78,10 +79,18 @@ public class CurveController {
 		model.addAttribute("curvePoint", curvePointResultat);
         return "redirect:/curvePoint/list";
     }
-
+    
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
+    	Optional<CurvePoint> curvePoint = curvePointService.getCurvePointById(id);
     	logger.info("delete curvePoint");
+    	model.addAttribute(curvePoint);
+        return "curvePoint/delete";
+    }
+
+    @PostMapping("/curvePoint/delete/{id}")
+    public String deleteBid(@PathVariable("id") Integer id) {
+    	logger.info("delete curvePoint with id: {}", id);
     	curvePointService.deleteCurvePointById(id);
         return "redirect:/curvePoint/list";
     }

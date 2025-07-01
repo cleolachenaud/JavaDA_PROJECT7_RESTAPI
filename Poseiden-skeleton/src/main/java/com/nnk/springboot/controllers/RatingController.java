@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.services.RatingService;
 
@@ -73,10 +74,17 @@ public class RatingController {
 		model.addAttribute("rating", ratingResultat);
         return "redirect:/rating/list";
     }
-
     @GetMapping("/rating/delete/{id}")
-    public String deleteRating(@PathVariable("id") Integer id, Model model) {
+    public String deleteBid(@PathVariable("id") Integer id, Model model) {
+    	Optional<Rating> rating = ratingService.getRatingById(id);
     	logger.info("delete rating");
+    	model.addAttribute(rating);
+        return "rating/delete";
+    }
+    
+    @PostMapping("/rating/delete/{id}")
+    public String deleteRating(@PathVariable("id") Integer id) {
+    	logger.info("Delete rating with id: {}", id);
     	ratingService.deleteRatingById(id);
         return "redirect:/rating/list";
     }

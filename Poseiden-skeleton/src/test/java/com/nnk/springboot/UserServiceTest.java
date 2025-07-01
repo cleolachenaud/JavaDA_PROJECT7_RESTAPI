@@ -1,0 +1,111 @@
+package com.nnk.springboot;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
+import org.junit.Before;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+import com.nnk.springboot.domain.User;
+import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.services.UserService;
+
+
+@SpringBootTest
+//@RunWith(MockitoJUnitRunner.class)
+@AutoConfigureMockMvc
+public class UserServiceTest {
+
+	@Mock
+    private UserRepository userRepository;
+
+    @InjectMocks
+    private UserService userService; // Classe A TESTER
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+    
+    @Test
+    public void testUpdateUserException() {
+    	User user = new User();
+        
+        when(userRepository.existsById(user.getId())).thenReturn(false);
+        
+        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
+        	userService.updateUser(user);
+        });
+
+        assertEquals("service.user.notfound", thrown.getMessage());
+    }
+
+    @Test
+    public void testUpdateUserOk() {
+    	User user = new User();
+    	user.setId(1);
+               
+        
+        when(userRepository.existsById(user.getId())).thenReturn(true);
+        when(userRepository.save(user)).thenReturn(user);
+        
+        User result = userService.updateUser(user);
+        
+        verify(userRepository).save(user);
+        assertNotNull(result);
+        assertEquals(user, result);
+    }
+    @Test
+    public void testDeleteUserException() {
+    	User user = new User();
+        
+        when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
+        
+        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> {
+        	userService.deleteUserById(user.getId());
+        });
+
+        assertEquals("service.user.notfound", thrown.getMessage());
+    }
+    @Test
+    public void testDeleteUserByIdOk() {
+        Integer id = 1;
+        when(userRepository.findById(id)).thenReturn(Optional.of(new User()));
+
+        userService.deleteUserById(id);
+
+        verify(userRepository).deleteById(id);
+    }
+    
+    @Test
+    public void testAddUserByIdOk() {
+    	User user = new User();
+    	user.setId(1);
+        
+        when(userRepository.save(user)).thenReturn(user);
+        
+        User result = userService.addUser(user);
+        
+        verify(userRepository).save(user);
+        assertNotNull(result);
+        assertEquals(user, result);
+    	
+    }
+    
+}

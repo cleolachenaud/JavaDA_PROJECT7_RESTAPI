@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -49,7 +52,7 @@ public class UserController {
 
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("controller.user.notfound" + id));
         user.setPassword("");
         model.addAttribute("user", user);
         return "user/update";
@@ -69,10 +72,18 @@ public class UserController {
         model.addAttribute("users", userRepository.findAll());
         return "redirect:/user/list";
     }
-
+    
     @GetMapping("/user/delete/{id}")
+    public String deleteBid(@PathVariable("id") Integer id, Model model) {
+    	User user = userRepository.getReferenceById(id);
+    	logger.info("delete user");
+    	model.addAttribute(user);
+        return "user/delete";
+    }
+
+    @PostMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("controller.user.notfound" + id));
         userRepository.delete(user);
         model.addAttribute("users", userRepository.findAll());
         return "redirect:/user/list";

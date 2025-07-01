@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.repositories.RuleNameRepository;
 import com.nnk.springboot.services.RuleNameService;
@@ -83,6 +84,29 @@ public class RuleServiceTest {
 
         assertEquals("service.rulename.notfound", thrown.getMessage());
     }
+    @Test
+    public void testDeleteRuleNameByIdOk() {
+        Integer id = 1;
+        when(ruleNameRepository.findById(id)).thenReturn(Optional.of(new RuleName()));
 
+        ruleNameService.deleteRuleNameById(id);
+
+        verify(ruleNameRepository).deleteById(id);
+    }
+    
+    @Test
+    public void testAddRuleNameByIdOk() {
+    	RuleName ruleName = new RuleName();
+        ruleName.setId(1);
+        
+        when(ruleNameRepository.save(ruleName)).thenReturn(ruleName);
+        
+        RuleName result = ruleNameService.addRuleName(ruleName);
+        
+        verify(ruleNameRepository).save(ruleName);
+        assertNotNull(result);
+        assertEquals(ruleName, result);
+    	
+    }
     
 }
