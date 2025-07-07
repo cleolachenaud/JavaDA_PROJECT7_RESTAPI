@@ -21,10 +21,11 @@ import java.sql.Timestamp;
 @Table(name = "trade")
 public class Trade {
 	
-	public Trade(String account, String type) {
+	public Trade(String account, String type, Double buyQuantity) {
 		super();
 		this.account = account;
 		this.type = type;
+		this.buyQuantity = buyQuantity;
 	}
 
 	@Id

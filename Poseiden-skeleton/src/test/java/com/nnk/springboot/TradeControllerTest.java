@@ -21,7 +21,7 @@ import com.nnk.springboot.services.TradeService;
 @SpringBootTest
 public class TradeControllerTest {
 	
-
+	private static final String TRADE_ERREUR = "le trade comporte des erreurs";
 	@Mock
     private TradeService tradeService; 
     @Mock
@@ -48,20 +48,20 @@ public class TradeControllerTest {
 
     	Trade trade = new Trade(); 
         BindingResult result = new BeanPropertyBindingResult(trade, "trade");
-        result.reject("error", "controller.trade.erreur"); // Simuler une erreur
+        result.reject("error", TRADE_ERREUR); // Simuler une erreur
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
         	tradeController.validate(trade, result, model);
         });
         verifyNoInteractions(tradeService); // Je vérifie que le service n'a pas été appelé
-        assertEquals("controller.trade.erreur", exception.getMessage()); // Je vérifie le message d'exception
+        assertEquals(TRADE_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
         
     }
 
     @Test
     public void testValidateSansErreurs() {
-
-    	Trade trade = new Trade("Trade Account", "Type"); 
+    	double nombre = 12;
+    	Trade trade = new Trade("Trade Account", "Type", nombre); 
         BindingResult result = new BeanPropertyBindingResult(trade, "trade");
 
         when(tradeService.addTrade(trade)).thenReturn(trade); 
@@ -70,12 +70,12 @@ public class TradeControllerTest {
      
         verify(model).addAttribute("trade", trade); // Je vérifie l'ajout au modèle
         verify(tradeService).addTrade(trade); // Je vérifie que le service a été appelé
-        assertEquals("trade/add", viewName); // Je vérifie que la vue retournée est correcte
+        assertEquals("redirect:/trade/list", viewName); // Je vérifie que la vue retournée est correcte
     }
     @Test
     public void testValidateUpdateSansErreurs() {
-
-    	Trade trade = new Trade("Trade Account", "Type");
+    	double nombre = 12;
+    	Trade trade = new Trade("Trade Account", "Type", nombre); 
         BindingResult result = new BeanPropertyBindingResult(trade, "trade");
 
         when(tradeService.updateTrade(trade)).thenReturn(trade);
@@ -92,7 +92,7 @@ public class TradeControllerTest {
     	Integer id = 1;
 
         doNothing().when(tradeService).deleteTradeById(id);
-        String viewName = tradeController.deleteTrade(id);
+        String viewName = tradeController.deleteTrade(id, model);
         verify(tradeService).deleteTradeById(id); // Je vérifie que le service a été appelé
         assertEquals("redirect:/trade/list", viewName); // Je vérifie que la vue retournée est correcte
     }

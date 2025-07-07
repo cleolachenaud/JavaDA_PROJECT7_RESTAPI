@@ -20,7 +20,7 @@ import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.services.RatingService;
 @SpringBootTest
 public class RatingControllerTest {
-	
+	private static final String RATING_ERREUR = "le rating comporte des erreurs";
 
 	@Mock
     private RatingService ratingService; 
@@ -48,13 +48,13 @@ public class RatingControllerTest {
 
     	Rating rating = new Rating(); 
         BindingResult result = new BeanPropertyBindingResult(rating, "rating");
-        result.reject("error", "controller.rating.erreur"); // Simuler une erreur
+        result.reject("error", RATING_ERREUR); // Simuler une erreur
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
         	ratingController.validate(rating, result, model);
         });
         verifyNoInteractions(ratingService); // Je vérifie que le service n'a pas été appelé
-        assertEquals("controller.rating.erreur", exception.getMessage()); // Je vérifie le message d'exception
+        assertEquals(RATING_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
         
     }
 
@@ -70,7 +70,7 @@ public class RatingControllerTest {
      
         verify(model).addAttribute("rating", rating); // Je vérifie l'ajout au modèle
         verify(ratingService).addRating(rating); // Je vérifie que le service a été appelé
-        assertEquals("rating/add", viewName); // Je vérifie que la vue retournée est correcte
+        assertEquals("redirect:/rating/list", viewName); // Je vérifie que la vue retournée est correcte
     }
     
     @Test
@@ -93,7 +93,7 @@ public class RatingControllerTest {
     	Integer id = 1;
 
         doNothing().when(ratingService).deleteRatingById(id);
-        String viewName = ratingController.deleteRating(id);
+        String viewName = ratingController.deleteBid(id, model);
         verify(ratingService).deleteRatingById(id); // Je vérifie que le service a été appelé
         assertEquals("redirect:/rating/list", viewName); // Je vérifie que la vue retournée est correcte
     }

@@ -24,7 +24,7 @@ import javax.validation.Valid;
 @Controller
 public class RuleNameController {
 	private static final Logger logger = LogManager.getLogger("RuleNameController");
-	
+	private static final String RULENAME_ERREUR = "le ruleName comporte des erreurs";
     // Constructeur pour injecter le service
     public RuleNameController(RuleNameService ruleNameService) {
         this.ruleNameService = ruleNameService;
@@ -38,7 +38,7 @@ public class RuleNameController {
     {
     	Iterable<RuleName> ruleNameList = ruleNameService.getRuleNameList();
     	logger.info("ruleNameList"+ ruleNameList.toString());
-    	model.addAttribute("liste de tous les rule name",ruleNameList);
+    	model.addAttribute("ruleNames",ruleNameList);
         return "ruleName/list";
     }
 
@@ -51,20 +51,24 @@ public class RuleNameController {
     public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("controller.rulename.erreur");
+    		throw new IllegalArgumentException(RULENAME_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("addRuleName"+ ruleName.toString());
     	RuleName ruleNameResultat = ruleNameService.addRuleName(ruleName);
 		model.addAttribute("ruleName", ruleNameResultat);
-        return "ruleName/add";
+        return "redirect:/ruleName/list";
     }
 
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
     	Optional<RuleName> ruleName = ruleNameService.getRuleNameById(id);
     	logger.info("updateRuleName"+ ruleName.toString());
-    	model.addAttribute(ruleName);
+    	if(!ruleName.isPresent()){
+    		// on remonte une exception
+    		throw new IllegalArgumentException(RULENAME_ERREUR);
+    	}
+    	model.addAttribute("ruleName", ruleName.get());
         return "ruleName/update";
     }
 
@@ -73,7 +77,7 @@ public class RuleNameController {
                              BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("controller.rulename.erreur");
+    		throw new IllegalArgumentException(RULENAME_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("updateCurvePoint"+ ruleName.toString());
@@ -83,7 +87,16 @@ public class RuleNameController {
     }
     @GetMapping("/ruleName/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
-    	Optional<RuleName> ruleName = ruleNameService.getRuleNameById(id);
+    	
+    	logger.info("Delete rulename with id: {}", id);
+    	if(id==null){
+    		// on remonte une exception
+    		throw new IllegalArgumentException(RULENAME_ERREUR);
+    	}
+    	ruleNameService.deleteRuleNameById(id);
+        return "redirect:/ruleName/list";
+    }
+    /*TODO Optional<RuleName> ruleName = ruleNameService.getRuleNameById(id);
     	logger.info("delete ruleName");
     	model.addAttribute(ruleName);
         return "ruleName/delete";
@@ -93,5 +106,5 @@ public class RuleNameController {
     	logger.info("Delete rulename with id: {}", id);
     	ruleNameService.deleteRuleNameById(id);
         return "redirect:/ruleName/list";
-    }
+    }*/
 }

@@ -23,7 +23,7 @@ import javax.validation.Valid;
 @Controller
 public class TradeController {
 private static final Logger logger = LogManager.getLogger("TradeController");
-		
+private static final String TRADE_ERREUR = "le trade comporte des erreurs";
 	@Autowired
 	TradeService tradeService;
 
@@ -32,7 +32,7 @@ private static final Logger logger = LogManager.getLogger("TradeController");
     {
     	Iterable<Trade> tradeList = tradeService.getTradeList();
     	logger.info("tradeList"+ tradeList.toString());
-    	model.addAttribute("liste de tous les tradeList",tradeList);
+    	model.addAttribute("trades",tradeList);
         return "trade/list";
     }
 
@@ -45,20 +45,24 @@ private static final Logger logger = LogManager.getLogger("TradeController");
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("controller.trade.erreur");
+    		throw new IllegalArgumentException(TRADE_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("addTrade"+ trade.toString());
     	Trade tradeResultat = tradeService.addTrade(trade);
 		model.addAttribute("trade", tradeResultat);
-        return "trade/add";
+        return "redirect:/trade/list";
     }
 
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
        	Optional<Trade> trade = tradeService.getTradeById(id);
     	logger.info("updateTrade"+ trade.toString());
-    	model.addAttribute(trade);
+    	if(!trade.isPresent()){
+    		// on remonte une exception
+    		throw new IllegalArgumentException(TRADE_ERREUR);
+    	}
+    	model.addAttribute("trade",trade.get());
         return "trade/update";
     }
 
@@ -67,7 +71,7 @@ private static final Logger logger = LogManager.getLogger("TradeController");
                              BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("controller.trade.erreur");
+    		throw new IllegalArgumentException(TRADE_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("updateTrade"+ trade.toString());
@@ -77,7 +81,15 @@ private static final Logger logger = LogManager.getLogger("TradeController");
     }
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
-    	Optional<Trade> trade = tradeService.getTradeById(id);
+        logger.info("Delete trade with id: {}", id);
+       	if(id==null){
+    		// on remonte une exception
+    		throw new IllegalArgumentException(TRADE_ERREUR);
+    	}
+       	tradeService.deleteTradeById(id);
+        return "redirect:/trade/list";
+    }
+    	/*TODO Optional<Trade> trade = tradeService.getTradeById(id);
     	logger.info("delete trade");
     	model.addAttribute(trade);
         return "trade/delete";
@@ -88,5 +100,5 @@ private static final Logger logger = LogManager.getLogger("TradeController");
         logger.info("Delete trade with id: {}", id);
        	tradeService.deleteTradeById(id);
         return "redirect:/trade/list";
-    }
+    }*/
 }

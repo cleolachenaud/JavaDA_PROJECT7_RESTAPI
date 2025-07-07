@@ -25,7 +25,7 @@ import com.nnk.springboot.services.BidListService;
 @AutoConfigureMockMvc
 @SpringBootTest
 public class BidControllerTest {
-	
+	private static final String BIDLIST_ERREUR = "le bidlist comporte des erreurs";
 
 	@Mock
     private BidListService bidListService; 
@@ -57,13 +57,13 @@ public class BidControllerTest {
 
     	BidList bidList = new BidList();  
         BindingResult result = new BeanPropertyBindingResult(bidList, "bidList");
-        result.reject("error", "controller.bidlist.erreur"); // Simuler une erreur
+        result.reject("error", BIDLIST_ERREUR); // Simuler une erreur
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
         	bidListController.validate(bidList, result, model);
         });
         verifyNoInteractions(bidListService); // Je vérifie que le service n'a pas été appelé
-        assertEquals("controller.bidlist.erreur", exception.getMessage()); // Je vérifie le message d'exception
+        assertEquals(BIDLIST_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
         
     }
 
@@ -79,7 +79,7 @@ public class BidControllerTest {
      
         verify(model).addAttribute("bidList", bidList); // Je vérifie l'ajout au modèle
         verify(bidListService).addBidList(bidList); // Je vérifie que le service a été appelé
-        assertEquals("bidList/add", viewName); // Je vérifie que la vue retournée est correcte
+        assertEquals("redirect:/bidList/list", viewName); // Je vérifie que la vue retournée est correcte
     }
     
 
@@ -103,7 +103,7 @@ public class BidControllerTest {
     	Integer id = 1;
 
         doNothing().when(bidListService).deleteBidListById(id);
-        String viewName = bidListController.deleteBid(id);
+        String viewName = bidListController.deleteBid(id, model);
         verify(bidListService).deleteBidListById(id); // Je vérifie que le service a été appelé
         assertEquals("redirect:/bidList/list", viewName); // Je vérifie que la vue retournée est correcte
     }

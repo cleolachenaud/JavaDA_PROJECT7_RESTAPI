@@ -23,6 +23,7 @@ import javax.validation.Valid;
 
 @Controller
 public class BidListController {
+	private static final String BIDLIST_ERREUR = "le bidlist comporte des erreurs";
 	private static final Logger logger = LogManager.getLogger("BidListController");
     
 	@Autowired
@@ -33,7 +34,7 @@ public class BidListController {
     {
     	Iterable<BidList> bidListList = bidListService.getBidListList();
     	logger.info("bidListList"+ bidListList.toString());
-    	model.addAttribute("liste de tous les bidList",bidListList);
+    	model.addAttribute("bidLists",bidListList);
         return "bidList/list";
     }
 
@@ -46,29 +47,33 @@ public class BidListController {
     public String validate(@Valid BidList bidList, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("controller.bidlist.erreur");
+    		throw new IllegalArgumentException(BIDLIST_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
-		logger.info("addCurvePoint"+ bidList.toString());
+		logger.info("addBidList"+ bidList.toString());
 		BidList bidListResultat = bidListService.addBidList(bidList);
 		model.addAttribute("bidList", bidListResultat);
-        return "bidList/add";
+        return "redirect:/bidList/list";
     }
 
     @GetMapping("/bidList/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-    	Optional<BidList> bidList = bidListService.getBidListById(id);
+    public String showUpdateForm(@PathVariable("id") Integer bidListId, Model model) {
+    	Optional<BidList> bidList = bidListService.getBidListById(bidListId);
     	logger.info("updateBidList"+ bidList.toString());
-    	model.addAttribute(bidList);
+    	if(!bidList.isPresent()){
+    		// on remonte une exception
+    		throw new IllegalArgumentException(BIDLIST_ERREUR);
+    	}
+    	model.addAttribute(bidList.get());// je récupère mon objet qui est dans mon Optional
         return "bidList/update";
     }
 
     @PostMapping("/bidList/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
+    public String updateBid(@PathVariable("id") Integer bidListId, @Valid BidList bidList,
                              BindingResult result, Model model) {
        	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("controller.bidlist.erreur");
+    		throw new IllegalArgumentException(BIDLIST_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("updateBidList"+ bidList.toString());
@@ -79,7 +84,16 @@ public class BidListController {
 
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
-    	Optional<BidList> bidList = bidListService.getBidListById(id);
+    	logger.info("Delete bid with id: {}", id);
+        if(id==null){
+    		// on remonte une exception
+    		throw new IllegalArgumentException(BIDLIST_ERREUR);
+    	}
+        bidListService.deleteBidListById(id);
+        return "redirect:/bidList/list";
+        
+    }
+    /*TODO Optional<BidList> bidList = bidListService.getBidListById(id);
     	logger.info("delete bidlist");
     	model.addAttribute(bidList);
         return "bidList/delete";
@@ -90,5 +104,5 @@ public class BidListController {
         logger.info("Delete bid with id: {}", id);
         bidListService.deleteBidListById(id);
         return "redirect:/bidList/list";
-    }
+    }*/
 }

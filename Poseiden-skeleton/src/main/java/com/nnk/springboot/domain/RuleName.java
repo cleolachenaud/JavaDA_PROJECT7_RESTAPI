@@ -34,7 +34,7 @@ public class RuleName {
 	@Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     @Column(name = "Id")
-    private Integer Id;
+    private Integer id;
 
 	@Column(name = "name")
     private String name;

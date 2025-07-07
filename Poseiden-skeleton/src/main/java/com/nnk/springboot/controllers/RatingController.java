@@ -21,6 +21,7 @@ import javax.validation.Valid;
 
 @Controller
 public class RatingController {
+	private static final String RATING_ERREUR = "le rating comporte des erreurs";
 	
 	private static final Logger logger = LogManager.getLogger("RatingController");
 	@Autowired
@@ -31,7 +32,7 @@ public class RatingController {
     {
     	Iterable<Rating> ratingList = ratingService.getRatingList();
     	logger.info("ratingList"+ ratingList.toString());
-    	model.addAttribute("liste de tous les rating",ratingList);
+    	model.addAttribute("ratings",ratingList);
         return "rating/list";
     }
 
@@ -44,20 +45,23 @@ public class RatingController {
     public String validate(@Valid Rating rating, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("controller.rating.erreur");
+    		throw new IllegalArgumentException(RATING_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("addRating"+ rating.toString());
 		Rating ratingResultat = ratingService.addRating(rating);
 		model.addAttribute("rating", ratingResultat);
-        return "rating/add";
+        return "redirect:/rating/list";
     }
 
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
     	Optional<Rating> rating = ratingService.getRatingById(id);
     	logger.info("updateRatingShowForm"+ rating.toString());
-    	model.addAttribute(rating);
+    	if(!rating.isPresent()) {
+    	    throw new IllegalArgumentException(RATING_ERREUR);
+    	}
+    	model.addAttribute("rating", rating.get());// je récupère mon objet qui est dans mon Optional
         return "rating/update";
     }
 
@@ -66,7 +70,7 @@ public class RatingController {
                              BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException("controller.rating.erreur");
+    		throw new IllegalArgumentException(RATING_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("updateRating"+ rating.toString());
@@ -76,7 +80,15 @@ public class RatingController {
     }
     @GetMapping("/rating/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
-    	Optional<Rating> rating = ratingService.getRatingById(id);
+    	logger.info("Delete rating with id: {}", id);
+    	if(id==null){
+    		// on remonte une exception
+    		throw new IllegalArgumentException(RATING_ERREUR);
+    	}
+    	ratingService.deleteRatingById(id);
+        return "redirect:/rating/list";
+    }
+    	/* TODO Optional<Rating> rating = ratingService.getRatingById(id);
     	logger.info("delete rating");
     	model.addAttribute(rating);
         return "rating/delete";
@@ -87,5 +99,5 @@ public class RatingController {
     	logger.info("Delete rating with id: {}", id);
     	ratingService.deleteRatingById(id);
         return "redirect:/rating/list";
-    }
+    }*/
 }

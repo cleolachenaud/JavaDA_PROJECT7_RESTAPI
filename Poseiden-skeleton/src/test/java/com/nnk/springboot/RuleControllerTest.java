@@ -21,7 +21,7 @@ import com.nnk.springboot.services.RuleNameService;
 @SpringBootTest
 public class RuleControllerTest {
 	
-
+	private static final String RULENAME_ERREUR = "le ruleName comporte des erreurs";
 	@Mock
     private RuleNameService ruleNameService; 
     @Mock
@@ -48,13 +48,13 @@ public class RuleControllerTest {
 
     	RuleName ruleName = new RuleName(); 
         BindingResult result = new BeanPropertyBindingResult(ruleName, "ruleName");
-        result.reject("error", "controller.ruleName.erreur"); // Simuler une erreur
+        result.reject("error", RULENAME_ERREUR); // Simuler une erreur
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
         	ruleNameController.validate(ruleName, result, model);
         });
         verifyNoInteractions(ruleNameService); // Je vérifie que le service n'a pas été appelé
-        assertEquals("controller.rulename.erreur", exception.getMessage()); // Je vérifie le message d'exception
+        assertEquals(RULENAME_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
         
     }
 
@@ -70,7 +70,7 @@ public class RuleControllerTest {
      
         verify(model).addAttribute("ruleName", ruleName); // Je vérifie l'ajout au modèle
         verify(ruleNameService).addRuleName(ruleName); // Je vérifie que le service a été appelé
-        assertEquals("ruleName/add", viewName); // Je vérifie que la vue retournée est correcte
+        assertEquals("redirect:/ruleName/list", viewName); // Je vérifie que la vue retournée est correcte
     }
     
     @Test
@@ -93,7 +93,7 @@ public class RuleControllerTest {
     	Integer id = 1;
 
         doNothing().when(ruleNameService).deleteRuleNameById(id);
-        String viewName = ruleNameController.deleteRuleName(id);
+        String viewName = ruleNameController.deleteBid(id, model);
         verify(ruleNameService).deleteRuleNameById(id); // Je vérifie que le service a été appelé
         assertEquals("redirect:/ruleName/list", viewName); // Je vérifie que la vue retournée est correcte
     }

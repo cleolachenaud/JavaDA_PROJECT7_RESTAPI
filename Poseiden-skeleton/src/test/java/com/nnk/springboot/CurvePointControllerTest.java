@@ -20,7 +20,7 @@ import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.services.CurvePointService;
 @SpringBootTest
 public class CurvePointControllerTest {
-	
+	private static final String CURVEPOINT_ERREUR = "le curvePoint comporte des erreurs";
 
 	@Mock
     private CurvePointService curvePointService; 
@@ -48,13 +48,13 @@ public class CurvePointControllerTest {
 
         CurvePoint curvePoint = new CurvePoint(); 
         BindingResult result = new BeanPropertyBindingResult(curvePoint, "curvePoint");
-        result.reject("error", "controller.curvepoint.erreur"); // Simuler une erreur
+        result.reject("error", CURVEPOINT_ERREUR); // Simuler une erreur
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
         	curveController.validate(curvePoint, result, model);
         });
         verifyNoInteractions(curvePointService); // Je vérifie que le service n'a pas été appelé
-        assertEquals("controller.curvepoint.erreur", exception.getMessage()); // Je vérifie le message d'exception
+        assertEquals(CURVEPOINT_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
         
     }
 
@@ -70,7 +70,7 @@ public class CurvePointControllerTest {
      
         verify(model).addAttribute("curvePoint", curvePoint); // Je vérifie l'ajout au modèle
         verify(curvePointService).addCurvePoint(curvePoint); // Je vérifie que le service a été appelé
-        assertEquals("curvePoint/add", viewName); // Je vérifie que la vue retournée est correcte
+        assertEquals("redirect:/curvePoint/list", viewName); // Je vérifie que la vue retournée est correcte
     }
     
     @Test
@@ -93,7 +93,7 @@ public class CurvePointControllerTest {
     	Integer id = 1;
 
         doNothing().when(curvePointService).deleteCurvePointById(id);
-        String viewName = curveController.deleteBid(id);
+        String viewName = curveController.deleteBid(id, model);
         verify(curvePointService).deleteCurvePointById(id); // Je vérifie que le service a été appelé
         assertEquals("redirect:/curvePoint/list", viewName); // Je vérifie que la vue retournée est correcte
     }
