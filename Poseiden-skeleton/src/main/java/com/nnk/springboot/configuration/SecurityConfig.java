@@ -49,13 +49,13 @@ public class SecurityConfig {
 	        auth.requestMatchers("/admin").hasRole("ADMIN"); // gère le login
 	        auth.requestMatchers("/user").hasRole("USER");
 	        auth.requestMatchers("/user/*").permitAll();
-	        auth.requestMatchers("/").permitAll();
-	        auth.anyRequest().authenticated();
+	        //auth.requestMatchers("/").permitAll();
+	        auth.anyRequest().authenticated(); // auth.anyRequest().permitAll(); // 
 	        logger.info("logout securityFilterChain");
 	    }).formLogin(Customizer.withDefaults())
 	        .logout(logout -> logout // ici on gère la déconnexion
-	            .logoutUrl("/logout") // URL de déconnexion
-	            .logoutSuccessUrl("/login?logout") // URL de redirection après déconnexion
+	            .logoutUrl("/") //logoutUrl("/logout") URL de déconnexion
+	            .logoutSuccessUrl("/") // logoutSuccessUrl("/login?logout")URL de redirection après déconnexion
 	            .invalidateHttpSession(true) // invalider la session HTTP
 	            .deleteCookies("JSESSIONID") // supprimer les cookies de session
 	        )

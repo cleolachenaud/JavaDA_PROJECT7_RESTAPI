@@ -4,6 +4,9 @@ package com.nnk.springboot.domain;
 import java.sql.Timestamp;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Pattern.Flag;
+
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,8 +30,6 @@ public class User {
 		this.fullname = fullname;
 		this.role = role;
 	}
-	
-	
 	
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)

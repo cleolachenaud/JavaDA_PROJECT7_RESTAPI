@@ -1,8 +1,11 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.domain.User;
-import com.nnk.springboot.repositories.UserRepository;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -12,20 +15,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.util.Optional;
-
-import javax.validation.Valid;
+import com.nnk.springboot.domain.User;
+import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.services.UserService;
 
 @Controller
 public class UserController {
     @Autowired
     private UserRepository userRepository;
+	@Autowired
+	UserService userService;
     
     private static final Logger logger = LogManager.getLogger("UserController");
-
+    private static final String USER_ERREUR = "le user comporte des erreurs";
+    private static final String PASSWORD_ERREUR = "le mot de passe doit contenir au moins 8caractères, 1 majuscule, 1minuscule, 1chiffre et un caractère spécial (@#$%^&+=!)";
+    
     @RequestMapping("/user/list")
     public String home(Model model)
     {
@@ -34,27 +39,35 @@ public class UserController {
     }
 
     @GetMapping("/user/add")
-    public String addUser(User bid) {
+    public String addUser(User user) {
         return "user/add";
     }
 
     @PostMapping("/user/validate")
     public String validate(@Valid User user, BindingResult result, Model model) {
-        if (!result.hasErrors()) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setPassword(encoder.encode(user.getPassword()));
-            userRepository.save(user);
-            model.addAttribute("users", userRepository.findAll());
-            return "redirect:/user/list";
+        if (result.hasErrors()) {
+        	model.addAttribute("error",USER_ERREUR);
+        	return "redirect:/user/list"; // si il y a une erreur on ne fait pas la suite 
         }
-        return "user/add";
+        logger.info("addUser"+ user.toString());
+        try {
+        User userResultat = userService.addUser(user);
+        model.addAttribute("user", userResultat);
+        }catch(Exception e) {
+        	model.addAttribute("error",PASSWORD_ERREUR);
+            return "/user/add";
+        }  
+        return "redirect:/user/list";
     }
 
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("controller.user.notfound" + id));
-        user.setPassword("");
-        model.addAttribute("user", user);
+        Optional<User> user = userService.getUserById(id);
+        logger.info("update user"+ user.toString());
+        if(!user.isPresent()) {
+        	throw new IllegalArgumentException(USER_ERREUR);
+        }
+        model.addAttribute("user", user.get());
         return "user/update";
     }
 
@@ -62,30 +75,30 @@ public class UserController {
     public String updateUser(@PathVariable("id") Integer id, @Valid User user,
                              BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "user/update";
+        	model.addAttribute("error",USER_ERREUR);
+        	return "redirect:/user/list"; // si il y a une erreur on ne fait pas la suite 
         }
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setId(id);
-        userRepository.save(user);
-        model.addAttribute("users", userRepository.findAll());
+        logger.info("updateUser"+ user.toString());
+        try {
+	    	User userResultat = userService.updateUser(user);
+	    	model.addAttribute("user", userResultat);
+        }catch(Exception e){
+        	model.addAttribute("error",PASSWORD_ERREUR);
+        	 return "/user/update";
+        }
         return "redirect:/user/list";
     }
     
     @GetMapping("/user/delete/{id}")
-    public String deleteBid(@PathVariable("id") Integer id, Model model) {
-    	User user = userRepository.getReferenceById(id);
-    	logger.info("delete user");
-    	model.addAttribute(user);
-        return "user/delete";
-    }
-
-    @PostMapping("/user/delete/{id}")
-    public String deleteUser(@PathVariable("id") Integer id, Model model) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("controller.user.notfound" + id));
-        userRepository.delete(user);
-        model.addAttribute("users", userRepository.findAll());
+    public String deleteBid(@PathVariable("id") Integer id) {
+    	logger.info("Delete user with id: {}", id);
+    	User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("controller.user.notfound" + id));
+    	if(id==null){
+    		// on remonte une exception
+    		throw new IllegalArgumentException("le user n'existe pas");
+    	}
+    	userService.deleteUserById(id);
         return "redirect:/user/list";
     }
 }
