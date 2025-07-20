@@ -25,7 +25,7 @@ public class UserService {
 	public Iterable<User> getUserList() {
         return userRepository.findAll();
     }
-	@Transactional
+	
 	public User addUser(User user) {
 	    logger.info("entrée dans la methode addUser");
 	    
@@ -50,7 +50,7 @@ public class UserService {
        logger.info("entrée dans la méthode updateUser de UserService");
 		if(!userRepository.existsById(user.getId())){
     	   logger.error("user inconnu");
-    	   throw new RuntimeException("service.user.notfound");
+    	   throw new RuntimeException("service.user.notfound"); //TODO
 		}
 		if((user.getPassword() != null && !user.getPassword().isEmpty())) {
 			String bCryptPasswordEncoderUpdate = validationPassword.validationEtEncodagePassword(user);
@@ -65,7 +65,7 @@ public class UserService {
 	public void deleteUserById(Integer id) {
 		 // je vérifie que le user existe
 		userRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("service.user.notfound"));
+			.orElseThrow(() -> new RuntimeException("service.user.notfound")); // TODO
 		userRepository.deleteById(id);
     }
 	

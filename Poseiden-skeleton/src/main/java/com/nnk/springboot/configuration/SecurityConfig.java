@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.http.HttpMethod;
 
 
 import com.nnk.springboot.repositories.UserRepository;
@@ -30,6 +32,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 	
 	private static final Logger logger = LogManager.getLogger("SpringSecurityConfig");
@@ -41,16 +44,48 @@ public class SecurityConfig {
     private UserRepository userRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	/*
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	    return http.authorizeHttpRequests(auth -> {
+	        logger.info("login securityFilterChain");
+	        
+	        // Autorise uniquement les ADMIN pour les opérations sensibles sur /users 
+	        auth.requestMatchers(HttpMethod.POST, "/user/validate").hasRole("ADMIN");
+	        auth.requestMatchers(HttpMethod.POST, "/user/update/{id}").hasRole("ADMIN");
+	        auth.requestMatchers("/user/**}").hasRole("ADMIN");
+	       
+	        // Autorise USER sur toutes les requêtes sauf celles définies ci-dessus
+	        auth.requestMatchers("/bidList/**").hasAnyRole("USER", "ADMIN");
+	        auth.requestMatchers("/curvePoint/**").hasAnyRole("USER", "ADMIN");
+	        auth.requestMatchers("/rating/**").hasAnyRole("USER", "ADMIN");
+	        auth.requestMatchers("/ruleName/**").hasAnyRole("USER", "ADMIN");
+	        auth.requestMatchers("/trade/**").hasAnyRole("USER", "ADMIN");
+	        
+	        // Tout le reste nécessite une authentification
+	        auth.anyRequest().authenticated();
 
+	        logger.info("logout securityFilterChain");
+	    }).formLogin(Customizer.withDefaults())
+	      .logout(logout -> logout
+	          .logoutUrl("/")
+	          .logoutSuccessUrl("/")
+	          .invalidateHttpSession(true)
+	          .deleteCookies("JSESSIONID")
+	      )
+	      .build();
+	}
+	*/
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {		
 	    return http.authorizeHttpRequests(auth -> {
 	    	logger.info("login securityFilterChain");
+	    	
 	        auth.requestMatchers("/admin").hasRole("ADMIN"); // gère le login
 	        auth.requestMatchers("/user").hasRole("USER");
 	        auth.requestMatchers("/user/*").permitAll();
 	        //auth.requestMatchers("/").permitAll();
-	        auth.anyRequest().authenticated(); // auth.anyRequest().permitAll(); // 
+	        auth.anyRequest().authenticated();// auth.anyRequest().permitAll(); //
 	        logger.info("logout securityFilterChain");
 	    }).formLogin(Customizer.withDefaults())
 	        .logout(logout -> logout // ici on gère la déconnexion
@@ -61,7 +96,6 @@ public class SecurityConfig {
 	        )
 	        .build();
 	}
-  
 
 	
 	@Bean

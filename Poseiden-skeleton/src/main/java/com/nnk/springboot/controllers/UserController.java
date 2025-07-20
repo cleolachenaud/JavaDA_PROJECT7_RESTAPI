@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,20 +30,21 @@ public class UserController {
     
     private static final Logger logger = LogManager.getLogger("UserController");
     private static final String USER_ERREUR = "le user comporte des erreurs";
-    private static final String PASSWORD_ERREUR = "le mot de passe doit contenir au moins 8caractères, 1 majuscule, 1minuscule, 1chiffre et un caractère spécial (@#$%^&+=!)";
+    private static final String PASSWORD_ERREUR = "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre et un caractère spécial (@#$%^&+=!).";
     
+    @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping("/user/list")
     public String home(Model model)
     {
         model.addAttribute("users", userRepository.findAll());
         return "user/list";
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/add")
     public String addUser(User user) {
         return "user/add";
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/user/validate")
     public String validate(@Valid User user, BindingResult result, Model model) {
         if (result.hasErrors()) {
@@ -59,7 +61,7 @@ public class UserController {
         }  
         return "redirect:/user/list";
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         Optional<User> user = userService.getUserById(id);
@@ -70,7 +72,7 @@ public class UserController {
         model.addAttribute("user", user.get());
         return "user/update";
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid User user,
                              BindingResult result, Model model) {
@@ -89,7 +91,7 @@ public class UserController {
         }
         return "redirect:/user/list";
     }
-    
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id) {
     	logger.info("Delete user with id: {}", id);

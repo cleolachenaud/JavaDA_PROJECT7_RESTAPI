@@ -12,11 +12,11 @@ import com.nnk.springboot.domain.User;
 public class ValidationPassword {
 	
 	@Autowired
-	PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	
 	private static final Logger logger = LogManager.getLogger("ValidationPasswordLogger");
 	
-	public boolean isValid(String password) { //, ConstraintValidatorContext context
+	private boolean isValid(String password) { 
         if (password == null) {
         	return false;
         }
