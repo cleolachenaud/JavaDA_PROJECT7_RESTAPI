@@ -44,38 +44,7 @@ public class SecurityConfig {
     private UserRepository userRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	/*
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	    return http.authorizeHttpRequests(auth -> {
-	        logger.info("login securityFilterChain");
-	        
-	        // Autorise uniquement les ADMIN pour les opérations sensibles sur /users 
-	        auth.requestMatchers(HttpMethod.POST, "/user/validate").hasRole("ADMIN");
-	        auth.requestMatchers(HttpMethod.POST, "/user/update/{id}").hasRole("ADMIN");
-	        auth.requestMatchers("/user/**}").hasRole("ADMIN");
-	       
-	        // Autorise USER sur toutes les requêtes sauf celles définies ci-dessus
-	        auth.requestMatchers("/bidList/**").hasAnyRole("USER", "ADMIN");
-	        auth.requestMatchers("/curvePoint/**").hasAnyRole("USER", "ADMIN");
-	        auth.requestMatchers("/rating/**").hasAnyRole("USER", "ADMIN");
-	        auth.requestMatchers("/ruleName/**").hasAnyRole("USER", "ADMIN");
-	        auth.requestMatchers("/trade/**").hasAnyRole("USER", "ADMIN");
-	        
-	        // Tout le reste nécessite une authentification
-	        auth.anyRequest().authenticated();
 
-	        logger.info("logout securityFilterChain");
-	    }).formLogin(Customizer.withDefaults())
-	      .logout(logout -> logout
-	          .logoutUrl("/")
-	          .logoutSuccessUrl("/")
-	          .invalidateHttpSession(true)
-	          .deleteCookies("JSESSIONID")
-	      )
-	      .build();
-	}
-	*/
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {		
 	    return http.authorizeHttpRequests(auth -> {
@@ -87,7 +56,10 @@ public class SecurityConfig {
 	        //auth.requestMatchers("/").permitAll();
 	        auth.anyRequest().authenticated();// auth.anyRequest().permitAll(); //
 	        logger.info("logout securityFilterChain");
-	    }).formLogin(Customizer.withDefaults())
+	    }) .formLogin(form -> form
+	    	    .loginPage("/login")   
+	    	    .permitAll()           
+	    	  )//.formLogin(Customizer.withDefaults())
 	        .logout(logout -> logout // ici on gère la déconnexion
 	            .logoutUrl("/") //logoutUrl("/logout") URL de déconnexion
 	            .logoutSuccessUrl("/") // logoutSuccessUrl("/login?logout")URL de redirection après déconnexion
