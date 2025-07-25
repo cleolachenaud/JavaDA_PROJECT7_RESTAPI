@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.User;
 
 @Service
@@ -35,7 +36,7 @@ public class ValidationPassword {
 		// je vérifie que mon mot de passe est raccord avec les règles de sécurité mises en place
         if(!isValid(user.getPassword())) {
         	logger.error("mot de passe trop simple");
-    		throw new IllegalArgumentException("le mot de passe est trop simple ! Veuillez en choisir un plus complexe !");
+    		throw new IllegalArgumentException(ConstantesUtils.PASSWORD_ERREUR);
     	}
 	    String encodedPassword = passwordEncoder.encode(user.getPassword());
 		return encodedPassword;

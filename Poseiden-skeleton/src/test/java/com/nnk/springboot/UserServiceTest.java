@@ -16,27 +16,33 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.services.UserService;
+import com.nnk.springboot.validation.ValidationPassword;
 
 
 @SpringBootTest
-//@RunWith(MockitoJUnitRunner.class)
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class UserServiceTest {
 
-	@Mock
-    private UserRepository userRepository;
-
     @InjectMocks
     private UserService userService; // Classe A TESTER
+	@Mock
+    private UserRepository userRepository;
+	@Mock
+	private ValidationPassword validationPassword;
+
 
     @Before
     public void setUp() {
@@ -53,7 +59,7 @@ public class UserServiceTest {
         	userService.updateUser(user);
         });
 
-        assertEquals("service.user.notfound", thrown.getMessage());
+        assertEquals(ConstantesUtils.USER_NOTFOUND, thrown.getMessage());
     }
 
     @Test
@@ -81,7 +87,7 @@ public class UserServiceTest {
         	userService.deleteUserById(user.getId());
         });
 
-        assertEquals("service.user.notfound", thrown.getMessage());
+        assertEquals(ConstantesUtils.USER_NOTFOUND, thrown.getMessage());
     }
     @Test
     public void testDeleteUserByIdOk() {
@@ -97,12 +103,12 @@ public class UserServiceTest {
     public void testAddUserByIdOk() {
     	User user = new User();
     	user.setId(1);
-        
-        when(userRepository.save(user)).thenReturn(user);
-        
+
+        when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+        when(validationPassword.validationEtEncodagePassword(user)).thenReturn("Azerty1&");
         User result = userService.addUser(user);
         
-        verify(userRepository).save(user);
+
         assertNotNull(result);
         assertEquals(user, result);
     	

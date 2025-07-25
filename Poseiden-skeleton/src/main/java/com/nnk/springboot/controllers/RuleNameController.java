@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.domain.RuleName;
@@ -24,7 +25,6 @@ import javax.validation.Valid;
 @Controller
 public class RuleNameController {
 	private static final Logger logger = LogManager.getLogger("RuleNameController");
-	private static final String RULENAME_ERREUR = "le ruleName comporte des erreurs";
     // Constructeur pour injecter le service
     public RuleNameController(RuleNameService ruleNameService) {
         this.ruleNameService = ruleNameService;
@@ -51,7 +51,7 @@ public class RuleNameController {
     public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(RULENAME_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.RULENAME_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("addRuleName"+ ruleName.toString());
@@ -66,7 +66,7 @@ public class RuleNameController {
     	logger.info("updateRuleName"+ ruleName.toString());
     	if(!ruleName.isPresent()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(RULENAME_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.RULENAME_ERREUR);
     	}
     	model.addAttribute("ruleName", ruleName.get());
         return "ruleName/update";
@@ -77,7 +77,7 @@ public class RuleNameController {
                              BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(RULENAME_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.RULENAME_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("updateCurvePoint"+ ruleName.toString());
@@ -91,20 +91,10 @@ public class RuleNameController {
     	logger.info("Delete rulename with id: {}", id);
     	if(id==null){
     		// on remonte une exception
-    		throw new IllegalArgumentException(RULENAME_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.RULENAME_ERREUR);
     	}
     	ruleNameService.deleteRuleNameById(id);
         return "redirect:/ruleName/list";
     }
-    /*TODO Optional<RuleName> ruleName = ruleNameService.getRuleNameById(id);
-    	logger.info("delete ruleName");
-    	model.addAttribute(ruleName);
-        return "ruleName/delete";
-    }
-    @PostMapping("/ruleName/delete/{id}")
-    public String deleteRuleName(@PathVariable("id") Integer id) {
-    	logger.info("Delete rulename with id: {}", id);
-    	ruleNameService.deleteRuleNameById(id);
-        return "redirect:/ruleName/list";
-    }*/
+
 }

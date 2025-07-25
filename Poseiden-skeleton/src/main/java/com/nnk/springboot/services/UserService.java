@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.validation.ValidationPassword;
@@ -50,7 +52,7 @@ public class UserService {
        logger.info("entrée dans la méthode updateUser de UserService");
 		if(!userRepository.existsById(user.getId())){
     	   logger.error("user inconnu");
-    	   throw new RuntimeException("service.user.notfound"); //TODO
+    	   throw new RuntimeException(ConstantesUtils.USER_NOTFOUND); 
 		}
 		if((user.getPassword() != null && !user.getPassword().isEmpty())) {
 			String bCryptPasswordEncoderUpdate = validationPassword.validationEtEncodagePassword(user);
@@ -65,7 +67,7 @@ public class UserService {
 	public void deleteUserById(Integer id) {
 		 // je vérifie que le user existe
 		userRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("service.user.notfound")); // TODO
+			.orElseThrow(() -> new RuntimeException(ConstantesUtils.USER_NOTFOUND));
 		userRepository.deleteById(id);
     }
 	

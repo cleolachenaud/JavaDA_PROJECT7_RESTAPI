@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
 
@@ -14,6 +15,7 @@ import com.nnk.springboot.repositories.BidListRepository;
 public class BidListService {
 	
 	private static final Logger logger = LogManager.getLogger("BidListService");
+
 	
 	@Autowired
 	private BidListRepository bidListRepository;
@@ -30,8 +32,8 @@ public class BidListService {
 	public BidList updateBidList (BidList bidList) {
 		 // je vérifie que le BidList existe, si il n'existe pas je remonte une exception
        if(!bidListRepository.existsById(bidList.getBidListId())){
-    	   logger.error("bidList inconnu");
-    	   throw new RuntimeException( "service.bidlist.notfound");
+    	   logger.error(ConstantesUtils.BIDLIST_UNKNOWN);
+    	   throw new RuntimeException( ConstantesUtils.BIDLIST_ERREUR);
        }
        // si il existe, j'insère le nouveau BidList en bdd. 
 		return bidListRepository.save(bidList);
@@ -43,7 +45,7 @@ public class BidListService {
 	public void deleteBidListById(Integer id) {
 		 // je vérifie que le bidlist existe
 		bidListRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("service.bidlist.notfound"));
+			.orElseThrow(() -> new RuntimeException(ConstantesUtils.BIDLIST_ERREUR));
 		bidListRepository.deleteById(id);
     }
 }

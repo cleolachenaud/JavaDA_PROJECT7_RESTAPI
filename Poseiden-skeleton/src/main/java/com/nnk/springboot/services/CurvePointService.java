@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.repositories.CurvePointRepository;
 
@@ -31,8 +32,8 @@ public class CurvePointService {
 	public CurvePoint updateCurvePoint (CurvePoint curvePoint) {
 		 // je vérifie que le curvePoint existe, si il n'existe pas je remonte une exception
        if(!curvePointRepository.existsById(curvePoint.getId())){
-    	   logger.error("curvePoint inconnu");
-    	   throw new RuntimeException("service.curvepoint.notfound");
+    	   logger.error(ConstantesUtils.CURVEPOINT_UNKNOWN);
+    	   throw new RuntimeException(ConstantesUtils.CURVEPOINT_NOTFOUND);
        }
        // si il existe, j'insère le nouveau curvePoint en bdd. 
 		return curvePointRepository.save(curvePoint);
@@ -43,7 +44,7 @@ public class CurvePointService {
     }
 	public void deleteCurvePointById(Integer id) {
         curvePointRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("service.curvepoint.notfound"));
+			.orElseThrow(() -> new RuntimeException(ConstantesUtils.CURVEPOINT_NOTFOUND));
         curvePointRepository.deleteById(id);
     }
 }

@@ -3,6 +3,7 @@ package com.nnk.springboot.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.repositories.TradeRepository;
 
@@ -31,10 +32,10 @@ public class TradeService {
 	public Trade updateTrade (Trade trade) {
 		 // je vérifie que le trade existe, si il n'existe pas je remonte une exception
        if(!tradeRepository.existsById(trade.getTradeId())){
-    	   logger.error("trade inconnu");
-    	   throw new RuntimeException("service.trade.notfound");
+    	   logger.error(ConstantesUtils.TRADE_UNKNOWN);
+    	   throw new RuntimeException(ConstantesUtils.TRADE_NOTFOUND);
        }
-       // si il existe, j'insère le nouveau curvePoint en bdd. 
+       // si il existe, j'insère le nouveau trade en bdd. 
 		return tradeRepository.save(trade);
 	}
 	
@@ -44,7 +45,7 @@ public class TradeService {
 	public void deleteTradeById(Integer id) {
 		 // je vérifie que le trade existe
 		tradeRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("service.trade.notfound"));
+			.orElseThrow(() -> new RuntimeException(ConstantesUtils.TRADE_NOTFOUND));
 		tradeRepository.deleteById(id);
     }
 

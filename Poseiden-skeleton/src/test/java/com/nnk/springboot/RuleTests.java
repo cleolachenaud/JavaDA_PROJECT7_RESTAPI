@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertFalse;
@@ -19,7 +20,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest 
+@ActiveProfiles("test")
 public class RuleTests {
 
 	@Autowired

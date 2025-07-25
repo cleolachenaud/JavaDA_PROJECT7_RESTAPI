@@ -12,12 +12,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult; 
 import org.springframework.validation.BeanPropertyBindingResult; 
 import org.springframework.boot.test.context.SpringBootTest;
-
+import org.springframework.test.context.ActiveProfiles;
 
 import com.nnk.springboot.controllers.UserController;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.services.UserService;
 @SpringBootTest
+@ActiveProfiles("test")
 public class UserControllerTest {
 	
 

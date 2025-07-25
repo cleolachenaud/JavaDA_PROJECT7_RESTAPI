@@ -12,16 +12,18 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult; 
 import org.springframework.validation.BeanPropertyBindingResult; 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.controllers.RuleNameController;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.services.RuleNameService;
 @SpringBootTest
+@ActiveProfiles("test")
 public class RuleControllerTest {
 	
-	private static final String RULENAME_ERREUR = "le ruleName comporte des erreurs";
+	
 	@Mock
     private RuleNameService ruleNameService; 
     @Mock
@@ -48,13 +50,13 @@ public class RuleControllerTest {
 
     	RuleName ruleName = new RuleName(); 
         BindingResult result = new BeanPropertyBindingResult(ruleName, "ruleName");
-        result.reject("error", RULENAME_ERREUR); // Simuler une erreur
+        result.reject("error", ConstantesUtils.RULENAME_ERREUR); // Simuler une erreur
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
         	ruleNameController.validate(ruleName, result, model);
         });
         verifyNoInteractions(ruleNameService); // Je vérifie que le service n'a pas été appelé
-        assertEquals(RULENAME_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
+        assertEquals(ConstantesUtils.RULENAME_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
         
     }
 
@@ -62,7 +64,7 @@ public class RuleControllerTest {
     public void testValidateSansErreurs() {
 
     	RuleName ruleName = new RuleName("Rule Name", "Description", "Json", "Template", "SQL", "SQL Part");
-        BindingResult result = new BeanPropertyBindingResult(ruleName, "curvePoint");
+        BindingResult result = new BeanPropertyBindingResult(ruleName, "ruleName");
 
         when(ruleNameService.addRuleName(ruleName)).thenReturn(ruleName); 
 

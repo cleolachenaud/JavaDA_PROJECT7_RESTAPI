@@ -12,16 +12,17 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult; 
 import org.springframework.validation.BeanPropertyBindingResult; 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.controllers.TradeController;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.services.TradeService;
 @SpringBootTest
+@ActiveProfiles("test")
 public class TradeControllerTest {
 	
-	private static final String TRADE_ERREUR = "le trade comporte des erreurs";
 	@Mock
     private TradeService tradeService; 
     @Mock
@@ -48,13 +49,13 @@ public class TradeControllerTest {
 
     	Trade trade = new Trade(); 
         BindingResult result = new BeanPropertyBindingResult(trade, "trade");
-        result.reject("error", TRADE_ERREUR); // Simuler une erreur
+        result.reject("error", ConstantesUtils.TRADE_ERREUR); // Simuler une erreur
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
         	tradeController.validate(trade, result, model);
         });
         verifyNoInteractions(tradeService); // Je vérifie que le service n'a pas été appelé
-        assertEquals(TRADE_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
+        assertEquals(ConstantesUtils.TRADE_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
         
     }
 

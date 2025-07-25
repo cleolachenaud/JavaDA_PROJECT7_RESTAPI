@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.services.CurvePointService;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +21,7 @@ import javax.validation.Valid;
 
 @Controller
 public class CurveController {
-	private static final String CURVEPOINT_ERREUR = "le curvePoint comporte des erreurs";
+	
 	private static final Logger logger = LogManager.getLogger("CurvePointController");
 	
     // Constructeur pour injecter le service
@@ -49,7 +50,7 @@ public class CurveController {
     public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(CURVEPOINT_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.CURVEPOINT_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("addCurvePoint"+ curvePoint.toString());
@@ -64,7 +65,7 @@ public class CurveController {
     	logger.info("updateCurvePoint"+ curvePoint.toString());
     	if(!curvePoint.isPresent()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(CURVEPOINT_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.CURVEPOINT_ERREUR);
     	}
     	model.addAttribute("curvePoint", curvePoint.get()); // je récupère mon objet qui est dans mon Optional
         return "curvePoint/update";
@@ -75,7 +76,7 @@ public class CurveController {
                              BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(CURVEPOINT_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.CURVEPOINT_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("updateCurvePoint"+ curvePoint.toString());
@@ -89,24 +90,10 @@ public class CurveController {
     	logger.info("delete curvePoint with id: {}", id);
     	if(id==null){
     		// on remonte une exception
-    		throw new IllegalArgumentException(CURVEPOINT_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.CURVEPOINT_ERREUR);
     	}
     	curvePointService.deleteCurvePointById(id);
         return "redirect:/curvePoint/list";
-    	/*TODO Optional<CurvePoint> curvePoint = curvePointService.getCurvePointById(id);
-    	logger.info("delete curvePoint");
-    	if(curvePoint.get()==null){
-    		// on remonte une exception
-    		throw new IllegalArgumentException("controller.curvepoint.erreur");
-    	}
-    	model.addAttribute(curvePoint.get());
-        return "curvePoint/delete";*/
+
     }
-/*
-    @PostMapping("/curvePoint/delete/{id}")
-    public String deleteBid(@PathVariable("id") Integer id) {
-    	logger.info("delete curvePoint with id: {}", id);
-    	curvePointService.deleteCurvePointById(id);
-        return "redirect:/curvePoint/list";
-    }*/
 }

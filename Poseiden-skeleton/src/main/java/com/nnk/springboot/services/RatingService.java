@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.repositories.RatingRepository;
 
@@ -30,8 +31,8 @@ public class RatingService {
 	public Rating updateRating (Rating rating) {
 		 // je vérifie que le rating existe, si il n'existe pas je remonte une exception
       if(!ratingRepository.existsById(rating.getId())){
-   	   logger.error("rating inconnu");
-   	   throw new RuntimeException("service.rating.notfound");
+   	   logger.error(ConstantesUtils.RATING_UNKNOWN);
+   	   throw new RuntimeException(ConstantesUtils.RATING_NOTFOUND);
       }
       // si il existe, j'insère le nouveau rating en bdd. 
 		return ratingRepository.save(rating);
@@ -43,7 +44,7 @@ public class RatingService {
 	public void deleteRatingById(Integer id) {
 		 // je vérifie que le rating existe
 		ratingRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("service.rating.notfound"));
+			.orElseThrow(() -> new RuntimeException(ConstantesUtils.RATING_NOTFOUND));
 		ratingRepository.deleteById(id);
    }
 }

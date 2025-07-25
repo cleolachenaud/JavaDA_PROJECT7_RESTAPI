@@ -21,14 +21,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import com.nnk.springboot.services.CurvePointService;
 
 
 @SpringBootTest
-//@RunWith(MockitoJUnitRunner.class)
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class CurvePointServiceTest {
 
@@ -53,7 +55,7 @@ public class CurvePointServiceTest {
         	curvePointService.updateCurvePoint(curvePoint);
         });
 
-        assertEquals("service.curvepoint.notfound", thrown.getMessage());
+        assertEquals(ConstantesUtils.CURVEPOINT_NOTFOUND, thrown.getMessage());
     }
 
     @Test
@@ -81,7 +83,7 @@ public class CurvePointServiceTest {
         	curvePointService.deleteCurvePointById(curvePoint.getId());
         });
 
-        assertEquals("service.curvepoint.notfound", thrown.getMessage());
+        assertEquals(ConstantesUtils.CURVEPOINT_NOTFOUND, thrown.getMessage());
     }
     
     @Test

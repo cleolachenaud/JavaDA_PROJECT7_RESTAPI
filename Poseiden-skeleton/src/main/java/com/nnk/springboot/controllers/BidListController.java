@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.services.BidListService;
@@ -23,7 +24,7 @@ import javax.validation.Valid;
 
 @Controller
 public class BidListController {
-	private static final String BIDLIST_ERREUR = "le bidlist comporte des erreurs";
+
 	private static final Logger logger = LogManager.getLogger("BidListController");
     
 	@Autowired
@@ -47,7 +48,7 @@ public class BidListController {
     public String validate(@Valid BidList bidList, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(BIDLIST_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.BIDLIST_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("addBidList"+ bidList.toString());
@@ -62,7 +63,7 @@ public class BidListController {
     	logger.info("updateBidList"+ bidList.toString());
     	if(!bidList.isPresent()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(BIDLIST_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.BIDLIST_ERREUR);
     	}
     	model.addAttribute(bidList.get());// je récupère mon objet qui est dans mon Optional
         return "bidList/update";
@@ -73,7 +74,7 @@ public class BidListController {
                              BindingResult result, Model model) {
        	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(BIDLIST_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.BIDLIST_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("updateBidList"+ bidList.toString());
@@ -87,22 +88,11 @@ public class BidListController {
     	logger.info("Delete bid with id: {}", id);
         if(id==null){
     		// on remonte une exception
-    		throw new IllegalArgumentException(BIDLIST_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.BIDLIST_ERREUR);
     	}
         bidListService.deleteBidListById(id);
         return "redirect:/bidList/list";
         
     }
-    /*TODO Optional<BidList> bidList = bidListService.getBidListById(id);
-    	logger.info("delete bidlist");
-    	model.addAttribute(bidList);
-        return "bidList/delete";
-    }
-    
-    @PostMapping("/bidList/delete/{id}")
-    public String deleteBid(@PathVariable("id") Integer id) {
-        logger.info("Delete bid with id: {}", id);
-        bidListService.deleteBidListById(id);
-        return "redirect:/bidList/list";
-    }*/
+
 }

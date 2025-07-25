@@ -2,8 +2,9 @@ package com.nnk.springboot;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,7 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.repositories.BidListRepository;
@@ -29,9 +32,10 @@ import com.nnk.springboot.services.BidListService;
 
 
 @SpringBootTest
-//@RunWith(MockitoJUnitRunner.class)
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class BidListServiceTest {
+	
 
 	@Mock
     private BidListRepository bidListRepository;
@@ -39,7 +43,7 @@ public class BidListServiceTest {
     @InjectMocks
     private BidListService bidListService; // Classe A TESTER
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
@@ -54,7 +58,7 @@ public class BidListServiceTest {
         	bidListService.updateBidList(bidList);
         });
 
-        assertEquals("service.bidlist.notfound", thrown.getMessage());
+        assertEquals(ConstantesUtils.BIDLIST_ERREUR, thrown.getMessage());
     }
 
     @Test
@@ -72,6 +76,7 @@ public class BidListServiceTest {
         assertNotNull(result);
         assertEquals(bidList, result);
     }
+    
     @Test
     public void testDeleteBidListException() {
     	BidList bidList = new BidList();
@@ -82,7 +87,7 @@ public class BidListServiceTest {
         	bidListService.deleteBidListById(bidList.getBidListId());
         });
 
-        assertEquals("service.bidlist.notfound", thrown.getMessage());
+        assertEquals(ConstantesUtils.BIDLIST_ERREUR, thrown.getMessage());
     }
     @Test
     public void testDeleteBidListByIdOk() {

@@ -21,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.repositories.RatingRepository;
@@ -29,6 +31,7 @@ import com.nnk.springboot.services.RatingService;
 
 
 @SpringBootTest
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class RatingServiceTest {
 
@@ -53,7 +56,7 @@ public class RatingServiceTest {
         	ratingService.updateRating(rating);
         });
 
-        assertEquals("service.rating.notfound", thrown.getMessage());
+        assertEquals(ConstantesUtils.RATING_NOTFOUND, thrown.getMessage());
     }
 
     @Test
@@ -81,7 +84,7 @@ public class RatingServiceTest {
         	ratingService.deleteRatingById(rating.getId());
         });
 
-        assertEquals("service.rating.notfound", thrown.getMessage());
+        assertEquals(ConstantesUtils.RATING_NOTFOUND, thrown.getMessage());
     }
     
     @Test

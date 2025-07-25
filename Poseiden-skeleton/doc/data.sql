@@ -87,3 +87,4 @@ insert into Users(id, fullname, username, password, role) values(1, "Administrat
 insert into Users(id, fullname, username, password, role) values(2, "User", "user", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "USER");
 insert into Users(id, fullname, username, password, role) values(2, "User", "user", "$2a$10$ITCs9fQ3d16giV6DqDJdieB9D3sQTP8Af/VPjfvN2OvgX0BYsUhCe", "USER");
 SELECT * FROM Users;
+

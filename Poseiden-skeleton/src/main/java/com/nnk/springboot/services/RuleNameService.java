@@ -3,6 +3,7 @@ package com.nnk.springboot.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.repositories.CurvePointRepository;
@@ -32,8 +33,8 @@ public class RuleNameService {
 	public RuleName updateRuleName (RuleName ruleName) {
 		 // je vérifie que le ruleName existe, si il n'existe pas je remonte une exception
        if(!ruleNameRepository.existsById(ruleName.getId())){
-    	   logger.error("ruleName inconnu");
-    	   throw new RuntimeException("service.rulename.notfound");
+    	   logger.error(ConstantesUtils.RULENAME_UNKNOWN);
+    	   throw new RuntimeException(ConstantesUtils.RULENAME_NOTFOUND);
        }
        // si il existe, j'insère le nouveau ruleName en bdd. 
 		return ruleNameRepository.save(ruleName);
@@ -45,7 +46,7 @@ public class RuleNameService {
 	public void deleteRuleNameById(Integer id) {
 		 // je vérifie que le ruleName existe
 		ruleNameRepository.findById(id)
-			.orElseThrow(() -> new RuntimeException("service.rulename.notfound"));
+			.orElseThrow(() -> new RuntimeException(ConstantesUtils.RULENAME_NOTFOUND));
 		ruleNameRepository.deleteById(id);
     }
 

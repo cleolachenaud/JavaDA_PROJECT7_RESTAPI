@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.services.RatingService;
@@ -21,7 +22,6 @@ import javax.validation.Valid;
 
 @Controller
 public class RatingController {
-	private static final String RATING_ERREUR = "le rating comporte des erreurs";
 	
 	private static final Logger logger = LogManager.getLogger("RatingController");
 	@Autowired
@@ -45,7 +45,7 @@ public class RatingController {
     public String validate(@Valid Rating rating, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(RATING_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.RATING_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("addRating"+ rating.toString());
@@ -59,7 +59,7 @@ public class RatingController {
     	Optional<Rating> rating = ratingService.getRatingById(id);
     	logger.info("updateRatingShowForm"+ rating.toString());
     	if(!rating.isPresent()) {
-    	    throw new IllegalArgumentException(RATING_ERREUR);
+    	    throw new IllegalArgumentException(ConstantesUtils.RATING_ERREUR);
     	}
     	model.addAttribute("rating", rating.get());// je récupère mon objet qui est dans mon Optional
         return "rating/update";
@@ -70,7 +70,7 @@ public class RatingController {
                              BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(RATING_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.RATING_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("updateRating"+ rating.toString());
@@ -83,21 +83,9 @@ public class RatingController {
     	logger.info("Delete rating with id: {}", id);
     	if(id==null){
     		// on remonte une exception
-    		throw new IllegalArgumentException(RATING_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.RATING_ERREUR);
     	}
     	ratingService.deleteRatingById(id);
         return "redirect:/rating/list";
     }
-    	/* TODO Optional<Rating> rating = ratingService.getRatingById(id);
-    	logger.info("delete rating");
-    	model.addAttribute(rating);
-        return "rating/delete";
-    }
-    
-    @PostMapping("/rating/delete/{id}")
-    public String deleteRating(@PathVariable("id") Integer id) {
-    	logger.info("Delete rating with id: {}", id);
-    	ratingService.deleteRatingById(id);
-        return "redirect:/rating/list";
-    }*/
 }

@@ -21,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.repositories.TradeRepository;
@@ -29,6 +31,7 @@ import com.nnk.springboot.services.TradeService;
 
 
 @SpringBootTest
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class TradeServiceTest {
 
@@ -53,7 +56,7 @@ public class TradeServiceTest {
         	tradeService.updateTrade(trade);
         });
 
-        assertEquals("service.trade.notfound", thrown.getMessage());
+        assertEquals(ConstantesUtils.TRADE_NOTFOUND, thrown.getMessage());
     }
 
     @Test
@@ -81,7 +84,7 @@ public class TradeServiceTest {
         	tradeService.deleteTradeById(trade.getTradeId());
         });
 
-        assertEquals("service.trade.notfound", thrown.getMessage());
+        assertEquals(ConstantesUtils.TRADE_NOTFOUND, thrown.getMessage());
     }
     @Test
     public void testDeleteTradeByIdOk() {

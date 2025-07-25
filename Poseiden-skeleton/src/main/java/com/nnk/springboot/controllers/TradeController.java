@@ -1,5 +1,6 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.domain.Trade;
@@ -23,7 +24,7 @@ import javax.validation.Valid;
 @Controller
 public class TradeController {
 private static final Logger logger = LogManager.getLogger("TradeController");
-private static final String TRADE_ERREUR = "le trade comporte des erreurs";
+
 	@Autowired
 	TradeService tradeService;
 
@@ -45,7 +46,7 @@ private static final String TRADE_ERREUR = "le trade comporte des erreurs";
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(TRADE_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.TRADE_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("addTrade"+ trade.toString());
@@ -60,7 +61,7 @@ private static final String TRADE_ERREUR = "le trade comporte des erreurs";
     	logger.info("updateTrade"+ trade.toString());
     	if(!trade.isPresent()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(TRADE_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.TRADE_ERREUR);
     	}
     	model.addAttribute("trade",trade.get());
         return "trade/update";
@@ -71,7 +72,7 @@ private static final String TRADE_ERREUR = "le trade comporte des erreurs";
                              BindingResult result, Model model) {
     	if(result.hasErrors()){
     		// on remonte une exception
-    		throw new IllegalArgumentException(TRADE_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.TRADE_ERREUR);
     	}
     	// si le bindingResult ne contient pas d'erreur, on effectue le traitement
 		logger.info("updateTrade"+ trade.toString());
@@ -84,21 +85,10 @@ private static final String TRADE_ERREUR = "le trade comporte des erreurs";
         logger.info("Delete trade with id: {}", id);
        	if(id==null){
     		// on remonte une exception
-    		throw new IllegalArgumentException(TRADE_ERREUR);
+    		throw new IllegalArgumentException(ConstantesUtils.TRADE_ERREUR);
     	}
        	tradeService.deleteTradeById(id);
         return "redirect:/trade/list";
     }
-    	/*TODO Optional<Trade> trade = tradeService.getTradeById(id);
-    	logger.info("delete trade");
-    	model.addAttribute(trade);
-        return "trade/delete";
-    }
-    
-    @PostMapping("/trade/delete/{id}")
-    public String deleteTrade(@PathVariable("id") Integer id) {
-        logger.info("Delete trade with id: {}", id);
-       	tradeService.deleteTradeById(id);
-        return "redirect:/trade/list";
-    }*/
+
 }

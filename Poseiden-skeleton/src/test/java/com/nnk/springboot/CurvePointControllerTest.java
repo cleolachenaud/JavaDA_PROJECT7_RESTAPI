@@ -12,15 +12,17 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult; 
 import org.springframework.validation.BeanPropertyBindingResult; 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.controllers.CurveController;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.services.CurvePointService;
 @SpringBootTest
+@ActiveProfiles("test")
 public class CurvePointControllerTest {
-	private static final String CURVEPOINT_ERREUR = "le curvePoint comporte des erreurs";
+	
 
 	@Mock
     private CurvePointService curvePointService; 
@@ -48,13 +50,13 @@ public class CurvePointControllerTest {
 
         CurvePoint curvePoint = new CurvePoint(); 
         BindingResult result = new BeanPropertyBindingResult(curvePoint, "curvePoint");
-        result.reject("error", CURVEPOINT_ERREUR); // Simuler une erreur
+        result.reject("error", ConstantesUtils.CURVEPOINT_ERREUR); // Simuler une erreur
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
         	curveController.validate(curvePoint, result, model);
         });
         verifyNoInteractions(curvePointService); // Je vérifie que le service n'a pas été appelé
-        assertEquals(CURVEPOINT_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
+        assertEquals(ConstantesUtils.CURVEPOINT_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
         
     }
 

@@ -12,15 +12,17 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult; 
 import org.springframework.validation.BeanPropertyBindingResult; 
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.controllers.RatingController;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.services.RatingService;
 @SpringBootTest
+@ActiveProfiles("test")
 public class RatingControllerTest {
-	private static final String RATING_ERREUR = "le rating comporte des erreurs";
+
 
 	@Mock
     private RatingService ratingService; 
@@ -48,13 +50,13 @@ public class RatingControllerTest {
 
     	Rating rating = new Rating(); 
         BindingResult result = new BeanPropertyBindingResult(rating, "rating");
-        result.reject("error", RATING_ERREUR); // Simuler une erreur
+        result.reject("error", ConstantesUtils.RATING_ERREUR); // Simuler une erreur
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
         	ratingController.validate(rating, result, model);
         });
         verifyNoInteractions(ratingService); // Je vérifie que le service n'a pas été appelé
-        assertEquals(RATING_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
+        assertEquals(ConstantesUtils.RATING_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
         
     }
 

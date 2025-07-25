@@ -14,18 +14,21 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.controllers.BidListController;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.services.BidListService;
 @AutoConfigureMockMvc
 @SpringBootTest
+@ActiveProfiles("test")
 public class BidControllerTest {
-	private static final String BIDLIST_ERREUR = "le bidlist comporte des erreurs";
+	
 
 	@Mock
     private BidListService bidListService; 
@@ -33,8 +36,6 @@ public class BidControllerTest {
     private Model model; 
     @InjectMocks
     private BidListController bidListController;
-    @Autowired
-    private MockMvc mockMvc;
     
     
     
@@ -57,13 +58,13 @@ public class BidControllerTest {
 
     	BidList bidList = new BidList();  
         BindingResult result = new BeanPropertyBindingResult(bidList, "bidList");
-        result.reject("error", BIDLIST_ERREUR); // Simuler une erreur
+        result.reject("error", ConstantesUtils.BIDLIST_ERREUR); // Simuler une erreur
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
         	bidListController.validate(bidList, result, model);
         });
         verifyNoInteractions(bidListService); // Je vérifie que le service n'a pas été appelé
-        assertEquals(BIDLIST_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
+        assertEquals(ConstantesUtils.BIDLIST_ERREUR, exception.getMessage()); // Je vérifie le message d'exception
         
     }
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.services.UserService;
@@ -29,8 +30,6 @@ public class UserController {
 	UserService userService;
     
     private static final Logger logger = LogManager.getLogger("UserController");
-    private static final String USER_ERREUR = "le user comporte des erreurs";
-    private static final String PASSWORD_ERREUR = "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre et un caractère spécial (@#$%^&+=!).";
     
     @PreAuthorize("hasRole('ADMIN')")
     @RequestMapping("/user/list")
@@ -48,7 +47,7 @@ public class UserController {
     @PostMapping("/user/validate")
     public String validate(@Valid User user, BindingResult result, Model model) {
         if (result.hasErrors()) {
-        	model.addAttribute("error",USER_ERREUR);
+        	model.addAttribute("error",ConstantesUtils.USER_ERREUR);
         	return "redirect:/user/list"; // si il y a une erreur on ne fait pas la suite 
         }
         logger.info("addUser"+ user.toString());
@@ -56,7 +55,7 @@ public class UserController {
         User userResultat = userService.addUser(user);
         model.addAttribute("user", userResultat);
         }catch(Exception e) {
-        	model.addAttribute("error",PASSWORD_ERREUR);
+        	model.addAttribute("error",ConstantesUtils.PASSWORD_ERREUR);
             return "/user/add";
         }  
         return "redirect:/user/list";
@@ -67,7 +66,7 @@ public class UserController {
         Optional<User> user = userService.getUserById(id);
         logger.info("update user"+ user.toString());
         if(!user.isPresent()) {
-        	throw new IllegalArgumentException(USER_ERREUR);
+        	throw new IllegalArgumentException(ConstantesUtils.USER_ERREUR);
         }
         model.addAttribute("user", user.get());
         return "user/update";
@@ -77,7 +76,7 @@ public class UserController {
     public String updateUser(@PathVariable("id") Integer id, @Valid User user,
                              BindingResult result, Model model) {
         if (result.hasErrors()) {
-        	model.addAttribute("error",USER_ERREUR);
+        	model.addAttribute("error",ConstantesUtils.USER_ERREUR);
         	return "redirect:/user/list"; // si il y a une erreur on ne fait pas la suite 
         }
 
@@ -86,7 +85,7 @@ public class UserController {
 	    	User userResultat = userService.updateUser(user);
 	    	model.addAttribute("user", userResultat);
         }catch(Exception e){
-        	model.addAttribute("error",PASSWORD_ERREUR);
+        	model.addAttribute("error",ConstantesUtils.PASSWORD_ERREUR);
         	 return "/user/update";
         }
         return "redirect:/user/list";
@@ -98,7 +97,7 @@ public class UserController {
     	User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("controller.user.notfound" + id));
     	if(id==null){
     		// on remonte une exception
-    		throw new IllegalArgumentException("le user n'existe pas");
+    		throw new IllegalArgumentException(ConstantesUtils.USER_NOTFOUND);
     	}
     	userService.deleteUserById(id);
         return "redirect:/user/list";
