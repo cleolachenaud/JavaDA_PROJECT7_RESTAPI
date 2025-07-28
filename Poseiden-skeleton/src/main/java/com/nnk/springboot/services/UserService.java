@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 @Service
 public class UserService {
 	private static final Logger logger = LogManager.getLogger("UserService");
-
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
@@ -33,8 +32,9 @@ public class UserService {
 	    
 	    if (userRepository.existsByUsername(user.getUsername())) {
 	        logger.error("username déjà connu de la base de donnees");
-	        throw new IllegalArgumentException("Ce username est déjà connu de nos services, merci de vous connecter");
+	        throw new IllegalArgumentException(ConstantesUtils.USER_EXIST);
 	    }
+	   
 	    String encodedPassword = validationPassword.validationEtEncodagePassword(user);
 
 	    User userCreate = new User();

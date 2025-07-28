@@ -35,16 +35,16 @@ public class Rating {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
-    
+	@NotBlank
     @Column(name = "moodysRating")
     private String moodysRating;
-    
+	@NotBlank
     @Column(name = "sandPRating")
     private String sandPRating;
-    
+	@NotBlank
     @Column(name = "fitchRating")
     private String fitchRating;
-    
+	@NotBlank
     @Column(name = "orderNumber")
     private Integer orderNumber;
 }

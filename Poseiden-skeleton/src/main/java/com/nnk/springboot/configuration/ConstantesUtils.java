@@ -15,6 +15,7 @@ public class ConstantesUtils {
 	public static final String RULENAME_NOTFOUND = "le rulename n'existe pas en base de données.";
 	public static final String BIDLIST_NOTFOUND = "le trade n'existe pas en base de données.";
 	public static final String USER_NOTFOUND = "le user n'existe pas en base de données.";
+	public static final String USER_EXIST = "le user existe déjà.";
 	public static final String PASSWORD_ERREUR = "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre et un caractère spécial (@#$%^&+=!).";
 	public static final String CURVEPOINT_NOTFOUND = "le curvepoint n'existe pas en base de données.";
 	public static final String TRADE_UNKNOWN = "le trade est inconnus.";

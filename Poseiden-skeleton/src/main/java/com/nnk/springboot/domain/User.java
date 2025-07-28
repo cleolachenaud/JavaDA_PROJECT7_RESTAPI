@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Pattern.Flag;
 
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,6 +33,7 @@ public class User {
 	
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "Id")
     private Integer id;
     @NotBlank(message = "Username is mandatory")
     private String username;

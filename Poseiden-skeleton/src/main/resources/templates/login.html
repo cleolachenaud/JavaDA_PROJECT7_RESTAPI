@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html  xmlns="http://www.w3.org/1999/xhtml" 
+		xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+
+</head>
+<body>
+<div class="container">
+<div class="row"><h2>Login with Username and Password</h2></div>
+<div class="row">
+    <!-- Bloc pour les messages de succès et d'erreur -->
+    <div th:if="${errorMessage != null}" class="error-message" th:text="${errorMessage}"></div>
+    
+    <form th:action="@{/login}" th:object="${user}" method="post">
+        <th>User     : </th><input type="username" id="username" name="username" autocomplete="username" ><br><br>
+        <th>Password : </th><input type="password" id="password" name="password" ><br><br>
+        
+        <button class="button" type="submit">login</button>
+    </form>
+    </div>
+</div>
+</body>
+</html>

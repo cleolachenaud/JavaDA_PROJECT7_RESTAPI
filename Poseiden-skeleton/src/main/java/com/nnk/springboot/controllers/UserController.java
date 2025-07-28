@@ -48,14 +48,15 @@ public class UserController {
     public String validate(@Valid User user, BindingResult result, Model model) {
         if (result.hasErrors()) {
         	model.addAttribute("error",ConstantesUtils.USER_ERREUR);
-        	return "redirect:/user/list"; // si il y a une erreur on ne fait pas la suite 
+        	return "/user/add"; // si il y a une erreur on ne fait pas la suite 
         }
         logger.info("addUser"+ user.toString());
+        
         try {
         User userResultat = userService.addUser(user);
         model.addAttribute("user", userResultat);
         }catch(Exception e) {
-        	model.addAttribute("error",ConstantesUtils.PASSWORD_ERREUR);
+        	model.addAttribute("error",e.getMessage());
             return "/user/add";
         }  
         return "redirect:/user/list";
@@ -66,7 +67,7 @@ public class UserController {
         Optional<User> user = userService.getUserById(id);
         logger.info("update user"+ user.toString());
         if(!user.isPresent()) {
-        	throw new IllegalArgumentException(ConstantesUtils.USER_ERREUR);
+        	throw new IllegalArgumentException(ConstantesUtils.USER_NOTFOUND);
         }
         model.addAttribute("user", user.get());
         return "user/update";
@@ -77,7 +78,7 @@ public class UserController {
                              BindingResult result, Model model) {
         if (result.hasErrors()) {
         	model.addAttribute("error",ConstantesUtils.USER_ERREUR);
-        	return "redirect:/user/list"; // si il y a une erreur on ne fait pas la suite 
+        	return "/user/update"; // si il y a une erreur on ne fait pas la suite 
         }
 
         logger.info("updateUser"+ user.toString());
@@ -85,7 +86,7 @@ public class UserController {
 	    	User userResultat = userService.updateUser(user);
 	    	model.addAttribute("user", userResultat);
         }catch(Exception e){
-        	model.addAttribute("error",ConstantesUtils.PASSWORD_ERREUR);
+        	model.addAttribute("error",e.getMessage());
         	 return "/user/update";
         }
         return "redirect:/user/list";
@@ -94,7 +95,7 @@ public class UserController {
     @GetMapping("/user/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id) {
     	logger.info("Delete user with id: {}", id);
-    	User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("controller.user.notfound" + id));
+    	User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(ConstantesUtils.USER_NOTFOUND + id));
     	if(id==null){
     		// on remonte une exception
     		throw new IllegalArgumentException(ConstantesUtils.USER_NOTFOUND);

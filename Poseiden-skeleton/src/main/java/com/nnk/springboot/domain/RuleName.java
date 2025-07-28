@@ -35,22 +35,22 @@ public class RuleName {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
-
+	@NotBlank
 	@Column(name = "name")
     private String name;
-    
+	@NotBlank
     @Column(name = "description")
     private String description;
-    
+	@NotBlank
     @Column(name = "json")
     private String json;
-    
+	@NotBlank
     @Column(name = "template")
     private String template;
-    
+	@NotBlank
     @Column(name = "sqlStr")
     private String sqlStr;
-    
+	@NotBlank
     @Column(name = "sqlPart")
     private String sqlPart;
 }

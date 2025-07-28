@@ -40,7 +40,7 @@ public class CustomUserDetailsService implements UserDetailsService{
 	    if (user == null) {
 	        throw new UsernameNotFoundException("User not found");
 	    }
-	    // même si vous avez un seul rôle, on prépare une liste pour plus de flexibilité
+	    // on prépare une liste pour plus de flexibilité plus tard
 	    List<String> roles = Collections.singletonList(user.getRole());
 	    List<GrantedAuthority> authorities = getGrantedAuthorities(roles);
 	    User userReturn = new User(user.getUsername(), user.getPassword(), authorities);

@@ -5,6 +5,7 @@
 <meta charset="utf-8"/>
 <title>Home</title>
 <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+
 </head>
 <body>
 <div class="container">
@@ -16,6 +17,7 @@
 			<a href="/trade/list">Trade</a>&nbsp;|&nbsp;
 			<a href="/ruleName/list">Rule</a>&nbsp;|&nbsp;
 			<a sec:authorize="hasRole('ADMIN')" href="/user/list">User</a>
+			
 		</div>
 			<div class="col-6 text-right">
 			Logged in user: <b th:inline="text"  class="user" th:text="${#authentication.getPrincipal().getUsername()}"></b>

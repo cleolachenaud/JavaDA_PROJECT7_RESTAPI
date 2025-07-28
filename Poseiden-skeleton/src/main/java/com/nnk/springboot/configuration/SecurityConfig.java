@@ -49,12 +49,13 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {		
 	    return http.authorizeHttpRequests(auth -> {
 	    	logger.info("login securityFilterChain");
-	    	
+	    	auth.requestMatchers("/css/**").permitAll();
 	        auth.requestMatchers("/admin").hasRole("ADMIN"); // gère le login
 	        auth.requestMatchers("/user").hasRole("USER");
-	        auth.requestMatchers("/user/*").permitAll();
+	        
+	       // auth.requestMatchers("/user/*").permitAll();
 	        //auth.requestMatchers("/").permitAll();
-	        auth.anyRequest().authenticated();// auth.anyRequest().permitAll(); //
+	    	auth.anyRequest().authenticated();//  auth.anyRequest().permitAll();  
 	        logger.info("logout securityFilterChain");
 	    }) .formLogin(form -> form
 	    	    .loginPage("/login")   
