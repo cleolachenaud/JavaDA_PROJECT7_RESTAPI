@@ -1,8 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.configuration.ConstantesUtils;
-import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.domain.CurvePoint;
+
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.services.TradeService;
 
@@ -20,14 +19,20 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 import javax.validation.Valid;
-
+/**
+ * controller qui gere les  trade
+ */
 @Controller
 public class TradeController {
 private static final Logger logger = LogManager.getLogger("TradeController");
 
 	@Autowired
 	TradeService tradeService;
-
+/**
+ * page d'accueil retourne la liste des trade
+ * @param model
+ * @return
+ */
     @RequestMapping("/trade/list")
     public String home(Model model)
     {
@@ -36,12 +41,22 @@ private static final Logger logger = LogManager.getLogger("TradeController");
     	model.addAttribute("trades",tradeList);
         return "trade/list";
     }
-
+/**
+ * méthode de saisie du formulaire d'ajout
+ * @param trade
+ * @return
+ */
     @GetMapping("/trade/add")
     public String addTradeForm(Trade trade) {
         return "trade/add";
     }
-
+/**
+ * méthode de validation du formulaire
+ * @param trade
+ * @param result
+ * @param model
+ * @return
+ */
     @PostMapping("/trade/validate")
     public String validate(@Valid Trade trade, BindingResult result, Model model) {
     	if(result.hasErrors()){
@@ -54,7 +69,12 @@ private static final Logger logger = LogManager.getLogger("TradeController");
 		model.addAttribute("trade", tradeResultat);
         return "redirect:/trade/list";
     }
-
+/**
+ * méthode de saisie du formulaire de mise a jour
+ * @param id
+ * @param model
+ * @return
+ */
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
        	Optional<Trade> trade = tradeService.getTradeById(id);
@@ -66,7 +86,14 @@ private static final Logger logger = LogManager.getLogger("TradeController");
     	model.addAttribute("trade",trade.get());
         return "trade/update";
     }
-
+/**
+ * methode de validation du formulaire dé mise à jour
+ * @param id
+ * @param trade
+ * @param result
+ * @param model
+ * @return
+ */
     @PostMapping("/trade/update/{id}")
     public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
                              BindingResult result, Model model) {
@@ -80,6 +107,13 @@ private static final Logger logger = LogManager.getLogger("TradeController");
 		model.addAttribute("trade", tradeResultat);
         return "redirect:/trade/list";
     }
+    
+    /**
+     * controller qui gere la suppression
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {
         logger.info("Delete trade with id: {}", id);

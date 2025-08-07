@@ -11,7 +11,9 @@ import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.repositories.CurvePointRepository;
 
-
+/**
+ * classe du service de l'identité de CURVEPOINT permet d'appeler les méthodes de création, modification, suppression
+ */
 @Service
 public class CurvePointService {
 	

@@ -29,7 +29,7 @@ public class Trade {
 	}
 
 	@Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.IDENTITY) // utilisation de GenerationType.IDENTITY pour la compatibilité avec Hibernate et MySQL
     @Column(name = "Id")
     private Integer tradeId;
 	@NotBlank

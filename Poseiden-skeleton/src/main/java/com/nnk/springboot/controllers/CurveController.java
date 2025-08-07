@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Optional;
 
 import javax.validation.Valid;
-
+/**
+ * classe de controller pour les curvepoint. 
+ */
 @Controller
 public class CurveController {
 	
@@ -31,7 +32,11 @@ public class CurveController {
 	
 	@Autowired
 	CurvePointService curvePointService;
-
+	/**
+	 * page d'accueil de curvepoint
+	 * @param model
+	 * @return
+	 */
     @RequestMapping("/curvePoint/list")
     public String home(Model model)
     {
@@ -40,12 +45,22 @@ public class CurveController {
     	model.addAttribute("curvePoints",curvePointList);
         return "curvePoint/list";
     }
-
+    /**
+     * méthode saisie du formulaire d'ajout 
+     * @param curvePoint
+     * @return
+     */
     @GetMapping("/curvePoint/add")
     public String addCurveForm(CurvePoint curvePoint) {
         return "curvePoint/add";
     }
-
+/**
+ * methode de validation du formulaire d'ajout
+ * @param curvePoint
+ * @param result
+ * @param model
+ * @return
+ */
     @PostMapping("/curvePoint/validate")
     public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
     	if(result.hasErrors()){
@@ -58,7 +73,12 @@ public class CurveController {
 		model.addAttribute("curvePoint", curvePointResultat);
         return "redirect:/curvePoint/list";
     }
-
+/**
+ * methode de saisie du formulaire de mise à jour
+ * @param id
+ * @param model
+ * @return
+ */
     @GetMapping("/curvePoint/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
     	Optional<CurvePoint> curvePoint = curvePointService.getCurvePointById(id);
@@ -70,7 +90,14 @@ public class CurveController {
     	model.addAttribute("curvePoint", curvePoint.get()); // je récupère mon objet qui est dans mon Optional
         return "curvePoint/update";
     }
-
+/**
+ * methode de validation du formulaire de mise à jour
+ * @param id
+ * @param curvePoint
+ * @param result
+ * @param model
+ * @return
+ */
     @PostMapping("/curvePoint/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
                              BindingResult result, Model model) {
@@ -84,7 +111,12 @@ public class CurveController {
 		model.addAttribute("curvePoint", curvePointResultat);
         return "redirect:/curvePoint/list";
     }
-    
+ /**
+  * controller qui gère la suppression
+  * @param id
+  * @param model
+  * @return
+  */
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
     	logger.info("delete curvePoint with id: {}", id);

@@ -1,5 +1,8 @@
 package com.nnk.springboot.configuration;
-
+/**
+ * Classe de constantes
+ * permet de regrouper toutes les constantes dans une seule classe utile
+ */
 public class ConstantesUtils {
 	
 	// constantes controllers

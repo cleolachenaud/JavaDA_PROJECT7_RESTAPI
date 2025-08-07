@@ -31,8 +31,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 @Configuration
-@EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableWebSecurity // permet d' importer la configuration Spring Security personnalisée
+@EnableMethodSecurity(prePostEnabled = true) //active la sécurité au niveau des méthode dans l' application
 public class SecurityConfig {
 	
 	private static final Logger logger = LogManager.getLogger("SpringSecurityConfig");
@@ -44,7 +44,13 @@ public class SecurityConfig {
     private UserRepository userRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
-
+/**
+ * La classe HttpSecurity est sollicitée pour appliquer la chaîne de filtres de sécurité aux requêtes HTTP. 
+ * Par défaut, les paramètres de sécurité fonctionnent sur toutes les requêtes.
+ * @param http
+ * @return
+ * @throws Exception
+ */
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {		
 	    return http.authorizeHttpRequests(auth -> {
@@ -52,39 +58,33 @@ public class SecurityConfig {
 	    	auth.requestMatchers("/css/**").permitAll();
 	        auth.requestMatchers("/admin").hasRole("ADMIN"); // gère le login
 	        auth.requestMatchers("/user").hasRole("USER");
-	        
-	       // auth.requestMatchers("/user/*").permitAll();
-	        //auth.requestMatchers("/").permitAll();
-	    	auth.anyRequest().authenticated();//  auth.anyRequest().permitAll();  
+	    	auth.anyRequest().authenticated();
 	        logger.info("logout securityFilterChain");
 	    }) .formLogin(form -> form
 	    	    .loginPage("/login")   
-	    	    .permitAll()           
-	    	  )//.formLogin(Customizer.withDefaults())
+	    	    .permitAll()
+	    	  )
 	        .logout(logout -> logout // ici on gère la déconnexion
-	            .logoutUrl("/") //logoutUrl("/logout") URL de déconnexion
-	            .logoutSuccessUrl("/") // logoutSuccessUrl("/login?logout")URL de redirection après déconnexion
+	            .logoutUrl("/") // URL de déconnexion
+	            .logoutSuccessUrl("/") // URL de redirection après déconnexion
 	            .invalidateHttpSession(true) // invalider la session HTTP
 	            .deleteCookies("JSESSIONID") // supprimer les cookies de session
 	        )
 	        .build();
 	}
 
-	
+	/**
+	 * Permet l'authentification + mdp encodé de l'utilisateur
+	 * @param http
+	 * @param bCryptPasswordEncoder
+	 * @return
+	 * @throws Exception
+	 */
 	@Bean
 	public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder) throws Exception {
 	    AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
 	    authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(bCryptPasswordEncoder);
 	    return authenticationManagerBuilder.build();
 	}
-	/*
-    @Bean
-	public UserDetailsService users() {
-	    UserDetails user = User.withDefaultPasswordEncoder()
-	        .username("user")
-	        .password("password")
-	        .roles("USER")
-	        .build();
-	    return new InMemoryUserDetailsManager(user);
-	}*/
+	
 }

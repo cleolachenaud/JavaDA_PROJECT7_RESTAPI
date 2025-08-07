@@ -1,10 +1,8 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.configuration.ConstantesUtils;
-import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.domain.CurvePoint;
+
 import com.nnk.springboot.domain.RuleName;
-import com.nnk.springboot.services.CurvePointService;
 import com.nnk.springboot.services.RuleNameService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,9 @@ import org.apache.logging.log4j.Logger;
 import java.util.Optional;
 
 import javax.validation.Valid;
-
+/**
+ * classe controler pour rulename
+ */
 @Controller
 public class RuleNameController {
 	private static final Logger logger = LogManager.getLogger("RuleNameController");
@@ -32,7 +32,11 @@ public class RuleNameController {
 	
 	@Autowired
 	RuleNameService ruleNameService;
-
+/**
+ * page accueil pour rulename retourne une liste des rulename
+ * @param model
+ * @return
+ */
     @RequestMapping("/ruleName/list")
     public String home(Model model)
     {
@@ -41,12 +45,22 @@ public class RuleNameController {
     	model.addAttribute("ruleNames",ruleNameList);
         return "ruleName/list";
     }
-
+/**
+ * saisie du formulaire d'ajout 
+ * @param ruleName
+ * @return
+ */
     @GetMapping("/ruleName/add")
     public String addRuleForm(RuleName ruleName) {
         return "ruleName/add";
     }
-
+/**
+ * méthode pour valider l'ajout 
+ * @param ruleName
+ * @param result
+ * @param model
+ * @return
+ */
     @PostMapping("/ruleName/validate")
     public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
     	if(result.hasErrors()){
@@ -59,7 +73,12 @@ public class RuleNameController {
 		model.addAttribute("ruleName", ruleNameResultat);
         return "redirect:/ruleName/list";
     }
-
+/**
+ * méthode de saisie du formualaire de mise à jour
+ * @param id
+ * @param model
+ * @return
+ */
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
     	Optional<RuleName> ruleName = ruleNameService.getRuleNameById(id);
@@ -71,7 +90,14 @@ public class RuleNameController {
     	model.addAttribute("ruleName", ruleName.get());
         return "ruleName/update";
     }
-
+/**
+ * méthode de validation du formulaire de maj
+ * @param id
+ * @param ruleName
+ * @param result
+ * @param model
+ * @return
+ */
     @PostMapping("/ruleName/update/{id}")
     public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
                              BindingResult result, Model model) {
@@ -85,6 +111,13 @@ public class RuleNameController {
 		model.addAttribute("ruleName", ruleNameResultat);
         return "redirect:/ruleName/list";
     }
+    
+    /**
+     * controller qui gere la suppression
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/ruleName/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
     	

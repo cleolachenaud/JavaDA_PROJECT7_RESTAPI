@@ -11,7 +11,9 @@ import org.apache.logging.log4j.Logger;
 import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.repositories.RatingRepository;
-
+/**
+ * classe du service de l'identité de RATING permet d'appeler les méthodes de création, modification, suppression
+ */
 @Service
 public class RatingService {
 	

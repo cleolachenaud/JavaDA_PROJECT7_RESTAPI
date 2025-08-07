@@ -33,6 +33,9 @@ public class CustomUserDetailsService implements UserDetailsService{
 	    return new BCryptPasswordEncoder();
 	}
 	
+	/**
+	 * permet de construire une représentation de l'utilisateur 
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	    logger.info("entrée dans la méthode loadUserByUsername");
@@ -47,7 +50,11 @@ public class CustomUserDetailsService implements UserDetailsService{
 	    logger.info("sortie de la méthode loadUserByUsername " + userReturn.toString());
 	    return userReturn;
 	}
-
+/**
+ * permet d'affecter un rôle à l'utilisateur 
+ * @param roles
+ * @return
+ */
 	private List<GrantedAuthority> getGrantedAuthorities(List<String> roles) {
 	    logger.info("entrée dans la méthode getGrantedAuthorities");
 	    List<GrantedAuthority> authorities = new ArrayList<>();
@@ -60,30 +67,6 @@ public class CustomUserDetailsService implements UserDetailsService{
 	    }
 	    logger.info("sortie de la méthode getGrantedAuthorities avec les rôles : " + roles);
 	    return authorities;
-	}
-	
-	/*
-	@Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		logger.info("entrée dans la méthode loadUserByUsername");
-		com.nnk.springboot.domain.User user = usersRepository.findByUsername(username);
-		if (user == null) {
-			throw new UsernameNotFoundException("User notfound");
-		}
-		User userReturn = new User(user.getUsername(), user.getPassword(), getGrantedAuthorities(user.getRole())); 
-        logger.info("sortie de la méthode loadUserByUsername" + userReturn.toString());
-        return userReturn; 
-    }
-
-    private List<GrantedAuthority> getGrantedAuthorities(String role) {
-    	logger.info("entrée dans la méthode getGrantedAuthorities");
-    	//role = "user";
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority(role));
-        logger.info("sortie de la méthode getGrantedAuthorities (" + role + ")");
-        return authorities;
-    }
-	    */
-	    
+	}	    
 	
 }

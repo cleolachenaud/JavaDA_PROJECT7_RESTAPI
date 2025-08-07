@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.User;
-
+/**
+ * Classe permettant de vérifier que le mot de passe est valide, respecte bien les exigences demandées et de l'encoder avant son insertion en bdd. 
+ */
 @Service
 public class ValidationPassword {
 	
@@ -16,7 +18,12 @@ public class ValidationPassword {
 	private PasswordEncoder passwordEncoder;
 	
 	private static final Logger logger = LogManager.getLogger("ValidationPasswordLogger");
-	
+	/**
+	 * boolean qui retourne vrai ou faux sur le rejex du mot de passe 
+	 * utilisé par la méthode validationEncodagePassword
+	 * @param password
+	 * @return
+	 */
 	private boolean isValid(String password) { 
         if (password == null) {
         	return false;
@@ -31,7 +38,12 @@ public class ValidationPassword {
         return password.matches(pattern);
     }
 
-	
+	/**
+	 * méthode qui encode le mot de passe. Préalablement cette méthode réalise une vérification afin de savoir
+	 * si le mot de passe saisi respecte bien les contraintes demandées. 
+	 * @param user
+	 * @return
+	 */
 	public String validationEtEncodagePassword(User user) {
 		// je vérifie que mon mot de passe est raccord avec les règles de sécurité mises en place
         if(!isValid(user.getPassword())) {

@@ -21,7 +21,11 @@ import com.nnk.springboot.configuration.ConstantesUtils;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
 import com.nnk.springboot.services.UserService;
-
+/** 
+ * classe qui gere le controller de user
+ * attention, cette fonctionnalité n'est autorisée que pour les ADMIN
+ * l'annotation @PreAuthorize filtre les roles des utilisateurs. 
+ */
 @Controller
 public class UserController {
     @Autowired
@@ -30,19 +34,35 @@ public class UserController {
 	UserService userService;
     
     private static final Logger logger = LogManager.getLogger("UserController");
-    
-    @PreAuthorize("hasRole('ADMIN')")
+    /**
+     * affiche la liste des utilisateurs déjà enregistrés en bdd
+     * @param model
+     * @return
+     */
+    @PreAuthorize("hasRole('ADMIN')") // annotation qui demande que le role soit ADMIN pour pouvoir accéder à la méthode
     @RequestMapping("/user/list")
     public String home(Model model)
     {
         model.addAttribute("users", userRepository.findAll());
         return "user/list";
     }
+    /**
+     * méthode saisie du formulaire d'ajout
+     * @param user
+     * @return
+     */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/add")
     public String addUser(User user) {
         return "user/add";
     }
+    /**
+     * validation du formulaire d'ajout
+     * @param user
+     * @param result
+     * @param model
+     * @return
+     */
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/user/validate")
     public String validate(@Valid User user, BindingResult result, Model model) {
@@ -56,11 +76,17 @@ public class UserController {
         User userResultat = userService.addUser(user);
         model.addAttribute("user", userResultat);
         }catch(Exception e) {
-        	model.addAttribute("error",e.getMessage());
+        	model.addAttribute("error",e.getMessage());// il peut y avoir plusieurs types d'exceptions remontées par le service. 
             return "/user/add";
         }  
         return "redirect:/user/list";
     }
+    /**
+     * saisie du formulaire de mise à jour
+     * @param id
+     * @param model
+     * @return
+     */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
@@ -72,6 +98,14 @@ public class UserController {
         model.addAttribute("user", user.get());
         return "user/update";
     }
+    /**
+     * validation du formulaire de mise à jour
+     * @param id
+     * @param user
+     * @param result
+     * @param model
+     * @return
+     */
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid User user,
@@ -91,6 +125,11 @@ public class UserController {
         }
         return "redirect:/user/list";
     }
+    /** 
+     * suppression d'un utilisateur 
+     * @param id
+     * @return
+     */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/user/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id) {

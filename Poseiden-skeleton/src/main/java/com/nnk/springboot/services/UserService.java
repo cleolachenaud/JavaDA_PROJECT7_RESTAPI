@@ -14,7 +14,9 @@ import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+/**
+ * classe du service de l'identité de USER permet d'appeler les méthodes de création, modification, suppression 
+ */
 @Service
 public class UserService {
 	private static final Logger logger = LogManager.getLogger("UserService");

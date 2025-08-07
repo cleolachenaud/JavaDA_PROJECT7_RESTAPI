@@ -13,7 +13,9 @@ import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+/**
+ * classe du service de l'identité de RULENAME permet d'appeler les méthodes de création, modification, suppression
+ */
 @Service
 public class RuleNameService {
 	private static final Logger logger = LogManager.getLogger("RuleNameService");
