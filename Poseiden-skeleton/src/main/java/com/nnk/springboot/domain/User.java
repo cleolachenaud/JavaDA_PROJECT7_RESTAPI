@@ -1,11 +1,7 @@
 package com.nnk.springboot.domain;
 
 
-import java.sql.Timestamp;
-
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Pattern.Flag;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

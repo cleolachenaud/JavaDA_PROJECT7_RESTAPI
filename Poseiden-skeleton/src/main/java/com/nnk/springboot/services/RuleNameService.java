@@ -1,18 +1,15 @@
 package com.nnk.springboot.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.nnk.springboot.configuration.ConstantesUtils;
-import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.domain.RuleName;
-import com.nnk.springboot.repositories.CurvePointRepository;
-import com.nnk.springboot.repositories.RuleNameRepository;
-
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.nnk.springboot.configuration.ConstantesUtils;
+import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.repositories.RuleNameRepository;
 /**
  * classe du service de l'identité de RULENAME permet d'appeler les méthodes de création, modification, suppression
  */

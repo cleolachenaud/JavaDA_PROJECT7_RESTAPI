@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -134,11 +133,8 @@ public class UserController {
     @GetMapping("/user/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id) {
     	logger.info("Delete user with id: {}", id);
-    	User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(ConstantesUtils.USER_NOTFOUND + id));
-    	if(id==null){
-    		// on remonte une exception
-    		throw new IllegalArgumentException(ConstantesUtils.USER_NOTFOUND);
-    	}
+    	// si l'ID est null ou non présent en base
+    	userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException(ConstantesUtils.USER_NOTFOUND + id));
     	userService.deleteUserById(id);
         return "redirect:/user/list";
     }

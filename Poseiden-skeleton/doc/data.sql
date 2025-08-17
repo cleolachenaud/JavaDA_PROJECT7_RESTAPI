@@ -1,29 +1,3 @@
-
-CREATE TABLE BidList (
-  Id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  account VARCHAR(30) NOT NULL,
-  type VARCHAR(30) NOT NULL,
-  bidQuantity DOUBLE,
-  askQuantity DOUBLE,
-  bid DOUBLE ,
-  ask DOUBLE,
-  benchmark VARCHAR(125),
-  bidListDate TIMESTAMP,
-  commentary VARCHAR(125),
-  security VARCHAR(125),
-  status VARCHAR(10),
-  trader VARCHAR(125),
-  book VARCHAR(125),
-  creationName VARCHAR(125),
-  creationDate TIMESTAMP ,
-  revisionName VARCHAR(125),
-  revisionDate TIMESTAMP ,
-  dealName VARCHAR(125),
-  dealType VARCHAR(125),
-  sourceListId VARCHAR(125),
-  side VARCHAR(125)
-);
-
 CREATE TABLE Trade (
   Id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
   account VARCHAR(30) NOT NULL,
@@ -47,44 +21,70 @@ CREATE TABLE Trade (
   sourceListId VARCHAR(125),
   side VARCHAR(125)
 );
-
-CREATE TABLE CurvePoint (
-  Id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE curvepoint (
+  Id int NOT NULL AUTO_INCREMENT,
   CurveId int,
-  asOfDate TIMESTAMP,
-  term DOUBLE ,
-  value DOUBLE ,
-  creationDate TIMESTAMP
+  asOfDate timestamp,
+  term double,
+  value double,
+  creationDate timestamp,
+  as_of_date datetime(6),
+  creation_date datetime(6),
+  curve_idint,
+  PRIMARY KEY (Id)
 );
-
-CREATE TABLE Rating (
-  Id int NOT NULL AUTO_INCREMENT   PRIMARY KEY,
-  moodysRating VARCHAR(125),
-  sandPRating VARCHAR(125),
-  fitchRating VARCHAR(125),
-  orderNumber int
+CREATE TABLE bidlist (
+  Id int NOT NULL AUTO_INCREMENT,
+  account varchar(30) NOT NULL,
+  type varchar(30) NOT NULL,
+  bidQuantity double,
+  askQuantity double,
+  bid double,
+  ask double,
+  benchmark varchar(125),
+  bidListDate timestamp,
+  commentary varchar(125),
+  security varchar(125),
+  status varchar(10),
+  trader varchar(125),
+  book varchar(125),
+  creationName varchar(125),
+  creationDate timestamp,
+  revisionName varchar(125),
+  revisionDate timestamp,
+  dealName varchar(125),
+  dealType varchar(125),
+  sourceListId varchar(125),
+  side varchar(125),
+  PRIMARY KEY (Id)
 );
-
-CREATE TABLE RuleName (
-  Id int NOT NULL AUTO_INCREMENT   PRIMARY KEY,
-  name VARCHAR(125),
-  description VARCHAR(125),
-  json VARCHAR(125),
-  template VARCHAR(512),
-  sqlStr VARCHAR(125),
-  sqlPart VARCHAR(125)
+CREATE TABLE rating (
+  Id int NOT NULL AUTO_INCREMENT,
+  moodysRating varchar(125),
+  sandPRating varchar(125),
+  fitchRating varchar(125),
+  orderNumber int,
+  PRIMARY KEY (Id)
 );
-
-CREATE TABLE Users (
-  Id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(125),
-  password VARCHAR(125),
-  fullname VARCHAR(125),
-  role VARCHAR(125)
+CREATE TABLE rulename (
+  Id int NOT NULL AUTO_INCREMENT,
+  name varchar(255),
+  description varchar(255),
+  json varchar(255),
+  template varchar(255),
+  sqlStr varchar(125),
+  sqlPart varchar(125),
+  sql_part varchar(255),
+  sql_str varchar(255),
+  PRIMARY KEY (Id)
 );
-
-insert into Users(id, fullname, username, password, role) values(1, "Administrator", "admin", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "ADMIN");
-insert into Users(id, fullname, username, password, role) values(2, "User", "user", "$2a$10$pBV8ILO/s/nao4wVnGLrh.sa/rnr5pDpbeC4E.KNzQWoy8obFZdaa", "USER");
-insert into Users(id, fullname, username, password, role) values(2, "User", "user", "$2a$10$ITCs9fQ3d16giV6DqDJdieB9D3sQTP8Af/VPjfvN2OvgX0BYsUhCe", "USER");
-SELECT * FROM Users;
-
+CREATE TABLE users (
+  Id int NOT NULL AUTO_INCREMENT,
+  username varchar(255),
+  password varchar(255),
+  fullname varchar(255),
+  role varchar(255),
+  PRIMARY KEY (Id)
+);
+-- Création du user "admin" / mdp "admin"
+insert into users values(1, 'admin', '$2a$12$L9PXbwwiLsK56L2xaJ2UaO3ACa7N8HG70nyrZJVG1QhZm42x4bch6', 'admin', 'ADMIN');

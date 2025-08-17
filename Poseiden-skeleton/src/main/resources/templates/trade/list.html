@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" 
-	  xmlns:th="http://www.thymeleaf.org">
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
 <meta charset="utf-8"/>
 <title>Home</title>
@@ -16,7 +17,6 @@
 			<a href="/trade/list">Trade</a>&nbsp;|&nbsp;
 			<a href="/ruleName/list">Rule</a>&nbsp;|&nbsp;
 			<a sec:authorize="hasRole('ADMIN')" href="/user/list">User</a>
-			</li>
 		</div>
 		<div class="col-6 text-right">
 			Logged in user: <b th:inline="text"  class="user" th:text="${#authentication.getPrincipal().getUsername()}"></b>

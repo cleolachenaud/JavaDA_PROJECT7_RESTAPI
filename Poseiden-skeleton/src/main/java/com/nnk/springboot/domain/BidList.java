@@ -1,9 +1,8 @@
 package com.nnk.springboot.domain;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import java.sql.Date;
 import java.sql.Timestamp;
+
+import javax.validation.constraints.NotBlank;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
