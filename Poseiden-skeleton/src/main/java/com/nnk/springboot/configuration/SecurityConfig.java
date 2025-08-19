@@ -38,6 +38,7 @@ public class SecurityConfig {
 	    return http.authorizeHttpRequests(auth -> {
 	    	logger.info("login securityFilterChain");
 	    	auth.requestMatchers("/css/**").permitAll();
+	    	auth.requestMatchers("/error").permitAll();
 	        auth.requestMatchers("/admin").hasRole("ADMIN"); // gère le login
 	        auth.requestMatchers("/user").hasRole("USER");
 	    	auth.anyRequest().authenticated();
